@@ -1,39 +1,71 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Icarus {
-    public static void greet() {
+    private ArrayList<String> list;
+
+    public Icarus(){
+        this.list = new ArrayList<>();
+        greet();
+        readCommand();
+    }
+
+    private void greet() {
         String greeting = """ 
-                ----------------------
-                Hello! I am Icarus. \n
-                What can I do for you?
-                ----------------------
+                -------------------------------------
+                Greetings! My name is Icarus. \n
+                How can I be of service to you today?
+                -------------------------------------
                 """;
         System.out.println(greeting);
     }
 
-    public static void sayBye() {
+    private void sayBye() {
         String bye = """
-                -----------------------
-                Bye! See you next time!
-                -----------------------
+                -------------------------------------
+                Bye! See you next time, my friend.
+                -------------------------------------
                 """;
         System.out.println(bye);
     }
 
-    public static void echo() {
+    private void addToList(String userInput) {
+        list.add(userInput);
+        System.out.println("I have added:");
+        echo(userInput);
+        readCommand();
+    }
+
+    private void returnList() {
+        int i = 1;
+        for (String item : list) {
+            String str = i + ". " + item;
+            System.out.println(str);
+            i++;
+        }
+        System.out.println("\n");
+        readCommand();
+    }
+
+    private void readCommand() {
         Scanner scanner = new Scanner(System.in);
         String userInput = scanner.nextLine();
+        System.out.println("\n");
         if (userInput.equals("bye")) {
             sayBye();
+        } else if (userInput.equals("list")) {
+            returnList();
         } else {
-            System.out.println("\n" + userInput + "\n");
-            echo();
+            addToList(userInput);
         }
+    }
 
+
+    private void echo(String userInput) {
+        System.out.println("\n" + userInput + "\n");
     }
 
     public static void main(String[] args) {
-        greet();
-        echo();
+        Icarus chatbot = new Icarus();
     }
 }
