@@ -1,4 +1,4 @@
-public class Task {
+public abstract class Task {
     private String task;
     private boolean isDone;
     public Task(String task) {
@@ -23,7 +23,7 @@ public class Task {
         this.isDone = true;
     }
 
-    public  void markUndone(){
+    public void markUndone(){
         this.isDone = false;
     }
 }
