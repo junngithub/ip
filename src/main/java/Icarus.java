@@ -5,11 +5,12 @@ import java.util.regex.Pattern;
 
 public class Icarus {
     private ArrayList<Task> list;
-    private final Pattern markPattern = Pattern.compile("^(mark|unmark)$");
+    private final Pattern hasNumberPattern = Pattern.compile("^(mark|unmark|delete)$");
     private final Pattern validMarkPattern = Pattern.compile("^mark [1-9][0-9]*$");
-    private final Pattern validUnmarkPattern = Pattern.compile("^unmark [1-9][0-9]*");
+    private final Pattern validUnmarkPattern = Pattern.compile("^unmark [1-9][0-9]*$");
+    private final Pattern validDeletePattern = Pattern.compile("^delete [1-9][0-9]*$");
     private final Pattern taskPattern = Pattern.compile("^(todo|deadline|event)");
-    private final String border = "---------------------------------------------";
+    private final String border = "--------------------------------------------------";
 
     public Icarus()  {
         this.list = new ArrayList<>();
@@ -61,6 +62,24 @@ public class Icarus {
         readCommand();
     }
 
+    private void returnNumberOfItems() {
+        System.out.println("You have " + list.size() + " item(s) in your list.");
+    }
+
+    private void delete(String userInput) throws InvalidNumberException {
+        String[] arr = userInput.split(" ");
+        int i = Integer.parseInt(arr[1]);
+        int size = this.list.size();
+        if (i > size) {
+            throw new InvalidNumberException(i, size);
+        }
+        Task task = list.remove(i - 1);
+        String message = "I have removed this item: \n" + task;
+        System.out.println(message);
+        System.out.println(border);
+        readCommand();
+    }
+
     private Task createTask(String userInput) throws EmptyInputException {
         String[] arr = userInput.split(" ", 2);
         String taskType = arr[0];
@@ -97,7 +116,7 @@ public class Icarus {
                 }
                 return new Events(task, stringArr[0].trim(), stringArr[1].trim());
             case "todo":
-                return new ToDos(userInput);
+                return new ToDos(string);
         }
         return null;
     }
@@ -110,11 +129,16 @@ public class Icarus {
     }
 
     private void returnList() {
-        int i = 1;
-        for (Task item : list) {
-            String str = i + ". " + item.toString();
-            System.out.println(str);
-            i++;
+        if (list.isEmpty()) {
+            System.out.println("You have no items in your list.");
+        } else {
+            System.out.println("Here is your list:");
+            int i = 1;
+            for (Task item : list) {
+                String str = i + ". " + item.toString();
+                System.out.println(str);
+                i++;
+            }
         }
         System.out.println(border);
         readCommand();
@@ -129,11 +153,14 @@ public class Icarus {
                 sayBye();
             } else if (userInput.equals("list")) {
                 returnList();
-            } else if (markPattern.matcher(userInput.split(" ")[0]).find()) {
+            } else if (hasNumberPattern.matcher(userInput.split(" ")[0]).find()) {
                 if (validUnmarkPattern.matcher(userInput).find()) {
                     markUndone(userInput);
                 } else if (validMarkPattern.matcher(userInput).find()) {
                     markDone(userInput);
+                } else if (validDeletePattern.matcher(userInput).find()) {
+                    delete(userInput);
+                    returnNumberOfItems();
                 } else {
                     throw new EmptyInputException(userInput.split(" ")[0], "number");
                 }
@@ -141,6 +168,7 @@ public class Icarus {
             } else if (taskPattern.matcher(userInput).find()) {
                 Task task = createTask(userInput);
                 addToList(task);
+                returnNumberOfItems();
             } else {
                 throw new NotACommandException();
             }
