@@ -5,12 +5,13 @@ import java.util.regex.Pattern;
 
 public class Icarus {
     private ArrayList<Task> list;
-    private final Pattern markPattern = Pattern.compile("^mark [1-9][0-9]*$");
-    private final Pattern unmarkPattern = Pattern.compile("^unmark [1-9][0-9]*$");
+    private final Pattern markPattern = Pattern.compile("^(mark|unmark)$");
+    private final Pattern validMarkPattern = Pattern.compile("^mark [1-9][0-9]*$");
+    private final Pattern validUnmarkPattern = Pattern.compile("^unmark [1-9][0-9]*");
     private final Pattern taskPattern = Pattern.compile("^(todo|deadline|event)");
     private final String border = "---------------------------------------------";
 
-    public Icarus(){
+    public Icarus()  {
         this.list = new ArrayList<>();
         greet();
         readCommand();
@@ -26,13 +27,18 @@ public class Icarus {
     }
 
     private void sayBye() {
-        String bye = border + "\nBye! See you next time, my friend.\n" + border;
+        String bye = "Bye! See you next time, my friend.\n" + border;
         System.out.println(bye);
     }
 
-    private void markDone(String userInput) {
-        int i = Integer.parseInt(userInput.split(" ")[1]) - 1;
-        Task task = list.get(i);
+    private void markDone(String userInput) throws InvalidNumberException {
+        String[] arr = userInput.split(" ");
+        int i = Integer.parseInt(arr[1]);
+        int size = this.list.size();
+        if (i > size) {
+            throw new InvalidNumberException(i, size);
+        }
+        Task task = list.get(i - 1);
         task.markDone();
         String message = "Very well, I have marked this as completed: \n" + task;
         System.out.println(message);
@@ -40,9 +46,14 @@ public class Icarus {
         readCommand();
     }
 
-    private void markUndone(String userInput) {
-        int i = Integer.parseInt(userInput.split(" ")[1]) - 1;
-        Task task = list.get(i);
+    private void markUndone(String userInput) throws InvalidNumberException {
+        String[] arr = userInput.split(" ");
+        int i = Integer.parseInt(arr[1]);
+        int size = this.list.size();
+        if (i > size) {
+            throw new InvalidNumberException(i, size);
+        }
+        Task task = list.get(i - 1);
         task.markUndone();
         String message = "Sure, I have marked this as unfinished: \n" + task;
         System.out.println(message);
@@ -50,28 +61,41 @@ public class Icarus {
         readCommand();
     }
 
-    private Task createTask(String userInput) {
+    private Task createTask(String userInput) throws EmptyInputException {
         String[] arr = userInput.split(" ", 2);
         String taskType = arr[0];
+        if (arr.length == 1 || arr[1].trim().charAt(0) == '/') {
+            throw new EmptyInputException(taskType, "description");
+        }
         String string = arr[1];
         switch (taskType) {
             case "deadline":
-                if (!string.contains("/by ")){
-                    break;
+                if (!string.contains("/by")) {
+                    throw new EmptyInputException(taskType, "missing by");
                 }
-                String[] deadlineArr = string.split(" /by ");
-                return new Deadlines(deadlineArr[0], deadlineArr[1]);
+                String[] deadlineArr = string.split("/by");
+                if (deadlineArr.length == 1 || deadlineArr[1].isBlank()) {
+                    throw new EmptyInputException(taskType + " /by", "description");
+                }
+                return new Deadlines(deadlineArr[0].trim(), deadlineArr[1].trim());
             case "event":
-                if (!string.contains("/from ")){
-                    break;
+                if (!string.contains("/from")) {
+                    throw new EmptyInputException(taskType, "missing from");
                 }
-                String task = string.split(" /from ")[0];
-                String leftover = string.split(" /from ")[1];
-                if (!string.contains("/to ")) {
-                    break;
+                String[] eventArr = string.split("/from");
+                if (eventArr.length == 1 || eventArr[1].isBlank()) {
+                    throw new EmptyInputException(taskType + " /from", "description");
                 }
-                String[] stringArr = leftover.split(" /to ");
-                return new Events(task, stringArr[0], stringArr[1]);
+                String task = eventArr[0].trim();
+                String leftover = eventArr[1];
+                if (!leftover.contains("/to")) {
+                    throw new EmptyInputException(taskType, "missing to");
+                }
+                String[] stringArr = leftover.split("/to");
+                if (stringArr.length == 1 || stringArr[1].isBlank()) {
+                    throw new EmptyInputException(taskType + " /to", "description");
+                }
+                return new Events(task, stringArr[0].trim(), stringArr[1].trim());
             case "todo":
                 return new ToDos(userInput);
         }
@@ -100,18 +124,32 @@ public class Icarus {
         Scanner scanner = new Scanner(System.in);
         String userInput = scanner.nextLine();
         System.out.println(border);
-        if (userInput.equals("bye")) {
-            sayBye();
-        } else if (userInput.equals("list")) {
-            returnList();
-        } else if (markPattern.matcher(userInput).find()) {
-            markDone(userInput);
-        } else if (unmarkPattern.matcher(userInput).find()) {
-            markUndone(userInput);
-        } else if (taskPattern.matcher(userInput).find()) {
-            Task task = createTask(userInput);
-            addToList(task);
+        try {
+            if (userInput.equals("bye")) {
+                sayBye();
+            } else if (userInput.equals("list")) {
+                returnList();
+            } else if (markPattern.matcher(userInput.split(" ")[0]).find()) {
+                if (validUnmarkPattern.matcher(userInput).find()) {
+                    markUndone(userInput);
+                } else if (validMarkPattern.matcher(userInput).find()) {
+                    markDone(userInput);
+                } else {
+                    throw new EmptyInputException(userInput.split(" ")[0], "number");
+                }
+
+            } else if (taskPattern.matcher(userInput).find()) {
+                Task task = createTask(userInput);
+                addToList(task);
+            } else {
+                throw new NotACommandException();
+            }
+        } catch (NotACommandException | EmptyInputException | InvalidNumberException exception) {
+            System.out.println(exception);
+            System.out.println(border);
+            readCommand();
         }
+
     }
 
     private void echo(String userInput) {
