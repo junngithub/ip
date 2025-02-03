@@ -1,3 +1,8 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -12,9 +17,15 @@ public class Icarus {
     private final Pattern taskPattern = Pattern.compile("^(todo|deadline|event)");
     private final String border = "--------------------------------------------------";
 
+
     public Icarus()  {
         this.list = new ArrayList<>();
         greet();
+        try {
+            loadSave();
+        } catch (Exception e) {
+            System.out.println("something went wrong");
+        }
         readCommand();
     }
 
@@ -28,8 +39,60 @@ public class Icarus {
     }
 
     private void sayBye() {
+        try {
+            updateSave();
+        } catch (IOException e ){
+            System.out.println("something went wrong: " + e);
+            readCommand();
+        }
         String bye = "Bye! See you next time, my friend.\n" + border;
         System.out.println(bye);
+    }
+
+    private void updateSave() throws IOException {
+        String home = System.getProperty("user.home");
+        Path path = Path.of(home, "iP", "data", "icarus.txt");
+        FileWriter fw = new FileWriter(path.toString(), false);
+        for (Task task : list) {
+            fw.write(task.toFile());
+        }
+        fw.close();
+
+    }
+
+    private void loadSave() throws IOException {
+        String home = System.getProperty("user.home");
+        Path path = Path.of(home, "iP", "data", "icarus.txt");
+        boolean fileExists = java.nio.file.Files.exists(path);
+        if (fileExists) {
+            Scanner s = new Scanner(path);
+            while (s.hasNext()) {
+                try {
+                    String line = s.nextLine();
+                    String[] lineArr = line.split(" ", 2);
+                    String taskString = lineArr[1];
+                    Task task = createTask(taskString);
+                    if (task == null) {
+                        throw new NotACommandException();
+                    }
+                    String done = lineArr[0];
+                    addToList(task, false);
+                    if (done.equals("1")) {
+                        task.markDone();
+                    } else if (!done.equals("0")) {
+                        throw new NotACommandException();
+                    }
+
+                } catch (EmptyInputException | NotACommandException e) {
+                    System.out.println("file corrupted");
+                }
+            }
+        } else {
+            java.nio.file.Path directory = Files.createDirectories(Path.of(home, "iP", "data"));
+            File f = new File(directory + "\\icarus.txt");
+            f.createNewFile();
+        }
+
     }
 
     private void markDone(String userInput) throws InvalidNumberException {
@@ -121,11 +184,13 @@ public class Icarus {
         return null;
     }
 
-    private void addToList(Task task) {
+    private void addToList(Task task, boolean toCall) {
         list.add(task);
-        System.out.println("I have added: \n" + task.toString());
-        System.out.println(border);
-        readCommand();
+        if (toCall) {
+            System.out.println("I have added: \n" + task.toString());
+            System.out.println(border);
+            readCommand();
+        }
     }
 
     private void returnList() {
@@ -167,7 +232,7 @@ public class Icarus {
 
             } else if (taskPattern.matcher(userInput).find()) {
                 Task task = createTask(userInput);
-                addToList(task);
+                addToList(task, true);
                 returnNumberOfItems();
             } else {
                 throw new NotACommandException();

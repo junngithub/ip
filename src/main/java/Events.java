@@ -2,7 +2,7 @@ public class Events extends Task{
     private String startDate;
     private String endDate;
     public Events(String task, String startDate, String endDate) {
-        super(task);
+        super(task, "event");
         this.startDate = startDate;
         this.endDate = endDate;
     }
