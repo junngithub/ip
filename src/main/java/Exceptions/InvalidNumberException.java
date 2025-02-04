@@ -1,3 +1,5 @@
+package Exceptions;
+
 public class InvalidNumberException extends Exception{
     private int index;
     private int size;

@@ -1,3 +1,5 @@
+package Exceptions;
+
 public class NotACommandException extends Exception {
     public NotACommandException(){
         super();

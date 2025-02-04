@@ -1,3 +1,5 @@
+package Tasks;
+
 public abstract class Task {
     private String task;
     private String taskType;

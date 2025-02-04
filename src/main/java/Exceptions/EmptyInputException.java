@@ -1,3 +1,5 @@
+package Exceptions;
+
 public class EmptyInputException extends Exception{
     private String taskType;
     private String problem;

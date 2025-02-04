@@ -1,4 +1,6 @@
-public class Events extends Task{
+package Tasks;
+
+public class Events extends Task {
     private String startDate;
     private String endDate;
     public Events(String task, String startDate, String endDate) {
