@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import Commands.AddCommand;
 import Exceptions.EmptyInputException;
+import Exceptions.InvalidInputException;
 import Exceptions.NotACommandException;
 import Tasks.Task;
 
@@ -30,7 +31,7 @@ public class Storage {
                 File f = new File(directory + "\\icarus.txt");
                 f.createNewFile();
             }
-        } catch (EmptyInputException | NotACommandException e) {
+        } catch (EmptyInputException | NotACommandException | InvalidInputException e) {
             System.out.println("file corrupted");
         } catch (IOException e) {
             System.out.println("something went wrong :(");

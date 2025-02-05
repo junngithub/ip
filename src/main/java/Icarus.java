@@ -1,11 +1,8 @@
-import java.util.ArrayList;
-
 import Commands.Command;
 import Essentials.Parser;
 import Essentials.Storage;
 import Essentials.TaskManager;
 import Essentials.UI;
-import Tasks.Task;
 
 public class Icarus {
     private UI ui;
@@ -14,7 +11,6 @@ public class Icarus {
     private TaskManager taskManager;
 
     public Icarus()  {
-        ArrayList<Task> list = new ArrayList<>();
         this.ui = new UI();
         this.parser = new Parser();
         this.taskManager = new TaskManager();

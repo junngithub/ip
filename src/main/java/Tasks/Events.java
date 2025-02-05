@@ -2,19 +2,26 @@ package Tasks;
 
 import Essentials.Parser;
 import Exceptions.EmptyInputException;
+import Exceptions.InvalidInputException;
 
 public class Events extends Task {
     private String startDate;
     private String endDate;
+    private String formattedStartDate;
+    private String formattedEndDate;
     private final static String taskType = "event";
 
-    private Events(String task, String startDate, String endDate) {
+    private Events(String task, String startDate, String endDate, String formattedStartDate,
+                   String formattedEndDate) {
         super(task, taskType);
         this.startDate = startDate;
         this.endDate = endDate;
+        this.formattedStartDate = formattedStartDate;
+        this.formattedEndDate = formattedEndDate;
     }
 
-    public static Task of(String string, Parser parser) throws EmptyInputException {
+    public static Task of(String string, Parser parser)
+            throws EmptyInputException, InvalidInputException {
         if (!string.contains("/from")) {
             throw new EmptyInputException(taskType, "missing from");
         }
@@ -31,7 +38,9 @@ public class Events extends Task {
         if (datesArr.length == 1 || datesArr[1].isBlank()) {
             throw new EmptyInputException(taskType + " /to", "description");
         }
-        return new Events(task, datesArr[0].trim(), datesArr[1].trim());
+        String start = datesArr[0].trim();
+        String end = datesArr[1].trim();
+        return new Events(task, start, end, parser.parseTime(start), parser.parseTime(end));
     }
 
     @Override
@@ -41,6 +50,7 @@ public class Events extends Task {
 
     @Override
     public String toString() {
-        return "[E]" + super.toString() + " (from: " + startDate + " to: " + endDate + ")";
+        return "[E]" + super.toString() + " (from: " + this.formattedStartDate
+                + " to: " + this.formattedEndDate + ")";
     }
 }

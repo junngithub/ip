@@ -13,7 +13,8 @@ public class DeleteCommand extends Command {
         super(userInput);
     }
 
-    public void execute(TaskManager taskManager, UI ui, Parser parser, Storage store) throws Exception {
+    public void execute(TaskManager taskManager, UI ui, Parser parser, Storage store)
+            throws InvalidInputException {
         ArrayList<Task> list = taskManager.getList();
         String[] arr = super.getUserInput().split(" ", 2);
         int i = Integer.parseInt(arr[1]);

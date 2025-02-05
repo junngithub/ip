@@ -11,17 +11,15 @@ public class InvalidInputException extends Exception{
         this.index = index;
         this.size = size;
     }
-    public InvalidInputException(int index, String timeType) {
+    public InvalidInputException() {
         this.isDate = true;
-        this.index = index;
-        this.timeType = timeType;
     }
 
     @Override
     public String toString() {
         String header = "I am unable to act on this request.\n";
         if (isDate) {
-          return header + "Date or Time provided is not of the correct format.";
+          return header + "Date and/or Time provided is invalid.";
         }
         return  header + "You are trying to access item number " + this.index +
                 ".\nBut there are " + this.size + " item(s) in your list.";

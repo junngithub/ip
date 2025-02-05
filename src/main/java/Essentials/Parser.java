@@ -2,7 +2,13 @@ package Essentials;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Date;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
@@ -27,7 +33,8 @@ public class Parser {
     private final Pattern validUnmarkPattern = Pattern.compile("^unmark [1-9][0-9]*$");
     private final Pattern validDeletePattern = Pattern.compile("^delete [1-9][0-9]*$");
     private final Pattern taskPattern = Pattern.compile("^(todo|deadline|event)");
-    private final Pattern timePattern = Pattern.compile("^[0-9]{4}(-[0-9]{2}){2} [0-9]{4}");
+    private final Pattern dateFirstPattern = Pattern.compile("^[0-9]{4}(-[0-9]{2}){2}( [0-9]{2}:[0-9]{2})*$");
+    private final Pattern timeFirstPattern = Pattern.compile("^[0-9]{2}:[0-9]{2}( [0-9]{4}(-[0-9]{2}){2})*$");
 
     public Parser() {
     }
@@ -59,7 +66,7 @@ public class Parser {
         return null;
     }
 
-    public Task createTask(String userInput) throws EmptyInputException {
+    public Task createTask(String userInput) throws EmptyInputException, InvalidInputException {
         String[] arr = userInput.trim().split(" ", 2);
         String taskType = arr[0];
         if (arr.length == 1 || arr[1].trim().charAt(0) == '/') {
@@ -75,7 +82,7 @@ public class Parser {
     }
 
     public void parseFromFile (Path path, TaskManager taskManager)
-            throws NotACommandException, IOException, EmptyInputException {
+            throws NotACommandException, IOException, EmptyInputException, InvalidInputException {
         Scanner s = new Scanner(path);
         while (s.hasNext()) {
             String line = s.nextLine();
@@ -96,10 +103,44 @@ public class Parser {
     }
 
     public String parseTime(String string) throws InvalidInputException {
-        if (timePattern.matcher(string).find()) {
-            LocalDate date = LocalDate.parse(string);
+        try {
+            if (dateFirstPattern.matcher(string).find()) {
+                String[] arr = string.split(" ");
+                LocalDate date = LocalDate.parse(arr[0]);
+                String dateString = date.format(DateTimeFormatter.ofPattern("MMM d yyyy"));
+                if (arr.length == 2) {
+                    String time = arr[1];
+                    if (Pattern.compile("[0-9]{2}:[0-9]{2}").matcher(time).find()) {
+                        DateTimeFormatter originalFormat = DateTimeFormatter.ofPattern("HH:mm");
+                        DateTimeFormatter intendedFormat = DateTimeFormatter.ofPattern("hh:mm a");
+                        LocalTime originalTime = LocalTime.parse(time, originalFormat);
+                        return dateString + ", " + originalTime.format(intendedFormat);
+                    }
+                    return dateString + ", " + time;
+                }
+                return dateString;
+            } else if (timeFirstPattern.matcher(string).find()) {
+                String[] arr = string.split(" ");
+                DateTimeFormatter originalFormat = DateTimeFormatter.ofPattern("HH:mm");
+                DateTimeFormatter intendedFormat = DateTimeFormatter.ofPattern("hh:mm a");
+                LocalTime originalTime = LocalTime.parse(arr[0], originalFormat);
+                String timeString = originalTime.format(intendedFormat);
+                if (arr.length == 2) {
+                    String dateString = arr[1];
+                    if (Pattern.compile("[0-9]{4}(-[0-9]{2}){2}").matcher(dateString).find()) {
+                        LocalDate date = LocalDate.parse(dateString);
+                        dateString = date.format(DateTimeFormatter.ofPattern("MMM d yyyy"));
+                        return timeString + ", " + dateString;
+                    }
+                    return dateString + ", " + timeString;
+                }
+                return timeString;
+            }
+            return string;
+        } catch (DateTimeParseException e) {
+            throw new InvalidInputException();
         }
-        return string;
+
     }
 
 }
