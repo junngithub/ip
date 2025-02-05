@@ -6,12 +6,9 @@ import Essentials.TaskManager;
 import Essentials.UI;
 import Exceptions.EmptyInputException;
 import Exceptions.InvalidInputException;
-import Tasks.Deadlines;
-import Tasks.Events;
 import Tasks.Task;
-import Tasks.ToDos;
 
-public class AddCommand extends Command{
+public class AddCommand extends Command {
     public AddCommand(String userInput) {
         super(userInput);
     }

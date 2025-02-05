@@ -3,7 +3,6 @@ package Exceptions;
 public class InvalidInputException extends Exception{
     private int index;
     private int size;
-    private String timeType;
     private boolean isDate;
     public InvalidInputException(int index, int size) {
         super();
