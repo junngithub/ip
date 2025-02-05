@@ -19,7 +19,7 @@ public class Icarus {
         this.parser = new Parser();
         this.taskManager = new TaskManager();
         this.store = new Storage();
-        store.loadSave(taskManager);
+        store.loadSave(taskManager, parser);
         ui.greet();
         run();
     }
@@ -29,13 +29,16 @@ public class Icarus {
         while (!isExiting) {
             try {
                 String commandRead = ui.readCommand();
+                ui.showBorder();
                 Command command = parser.parseCommand(commandRead);
                 if (command != null) {
-                    command.execute(taskManager, ui, store);
+                    command.execute(taskManager, ui, parser, store);
                     isExiting = command.isExiting();
                 }
             } catch (Exception e) {
                 System.out.println(e.toString());
+            } finally {
+                ui.showBorder();
             }
         }
     }

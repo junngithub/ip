@@ -2,12 +2,7 @@ package Essentials;
 
 import java.util.ArrayList;
 
-import Exceptions.EmptyInputException;
-import Exceptions.InvalidNumberException;
-import Tasks.Deadlines;
-import Tasks.Events;
 import Tasks.Task;
-import Tasks.ToDos;
 
 public class TaskManager {
     private ArrayList<Task> list;
@@ -22,7 +17,7 @@ public class TaskManager {
     public void addToList(Task task, boolean toCall) {
         list.add(task);
         if (toCall) {
-            System.out.println("I have added: \n" + task.toString());
+            System.out.println("I have added: \n" + task.toString() + "\n");
         }
     }
 

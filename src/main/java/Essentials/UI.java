@@ -20,4 +20,8 @@ public class UI {
                 """ + border;
         System.out.println(greeting);
     }
+
+    public void showBorder() {
+        System.out.println(border);
+    }
 }

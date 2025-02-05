@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import Commands.AddCommand;
 import Exceptions.EmptyInputException;
@@ -20,27 +19,11 @@ public class Storage {
         this.path = Path.of(home, "iP", "data", "icarus.txt");
     }
 
-    public void loadSave(TaskManager taskManager) {
+    public void loadSave(TaskManager taskManager, Parser parser) {
         boolean fileExists = java.nio.file.Files.exists(path);
         try {
             if (fileExists) {
-                Scanner s = new Scanner(path);
-                while (s.hasNext()) {
-                    String line = s.nextLine();
-                    String[] lineArr = line.split(" ", 2);
-                    String taskString = lineArr[1];
-                    Task task = AddCommand.createTask(taskString);
-                    if (task == null) {
-                        throw new NotACommandException();
-                    }
-                    String done = lineArr[0];
-                    taskManager.addToList(task, false);
-                    if (done.equals("1")) {
-                        task.markDone();
-                    } else if (!done.equals("0")) {
-                        throw new NotACommandException();
-                    }
-                }
+                parser.parseFromFile(path, taskManager);
             } else {
                 String home = System.getProperty("user.home");
                 Path directory = Files.createDirectories(Path.of(home, "iP", "data"));
@@ -55,10 +38,10 @@ public class Storage {
     }
 
     public void updateSave(ArrayList<Task> list) throws IOException {
-
         FileWriter fw = new FileWriter(path.toString(), false);
         for (Task task : list) {
             fw.write(task.toFile());
+            fw.write("\n");
         }
         fw.close();
     }

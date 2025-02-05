@@ -1,8 +1,13 @@
 package Tasks;
 
 public class ToDos extends Task {
-    public ToDos(String task) {
-        super(task, "todo");
+    private final static String taskType = "todo";
+    private ToDos(String task) {
+        super(task, taskType);
+    }
+
+    public static Task of(String task) {
+        return new ToDos(task);
     }
 
     @Override

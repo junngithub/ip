@@ -2,6 +2,7 @@ package Commands;
 
 import java.util.ArrayList;
 
+import Essentials.Parser;
 import Essentials.Storage;
 import Essentials.TaskManager;
 import Essentials.UI;
@@ -12,7 +13,7 @@ public class ListCommand extends Command {
         super(userInput);
     }
 
-    public void execute(TaskManager taskManager, UI ui, Storage store) throws Exception {
+    public void execute(TaskManager taskManager, UI ui, Parser parser, Storage store) throws Exception {
         ArrayList<Task> list = taskManager.getList();
         if (list.isEmpty()) {
             System.out.println("You have no items in your list.");
