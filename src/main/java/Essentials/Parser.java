@@ -16,6 +16,7 @@ import Commands.AddCommand;
 import Commands.Command;
 import Commands.DeleteCommand;
 import Commands.ExitCommand;
+import Commands.FindCommand;
 import Commands.ListCommand;
 import Commands.MarkCommand;
 import Commands.UnmarkCommand;
@@ -29,6 +30,7 @@ import Tasks.ToDos;
 
 public class Parser {
     private final Pattern hasNumberPattern = Pattern.compile("^(mark|unmark|delete)$");
+    private final Pattern hasKeywordPattern = Pattern.compile("^find$");
     private final Pattern validMarkPattern = Pattern.compile("^mark [1-9][0-9]*$");
     private final Pattern validUnmarkPattern = Pattern.compile("^unmark [1-9][0-9]*$");
     private final Pattern validDeletePattern = Pattern.compile("^delete [1-9][0-9]*$");
@@ -57,6 +59,8 @@ public class Parser {
                 }
             } else if (taskPattern.matcher(userInput).find()) {
                 return new AddCommand(userInput);
+            } else if (hasKeywordPattern.matcher(userInput.split(" ")[0]).find()) {
+                return new FindCommand(userInput);
             } else {
                 throw new NotACommandException();
             }
