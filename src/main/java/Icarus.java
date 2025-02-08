@@ -10,7 +10,7 @@ public class Icarus {
     private Storage store;
     private TaskManager taskManager;
 
-    public Icarus()  {
+    public Icarus() {
         this.ui = new UI();
         this.parser = new Parser();
         this.taskManager = new TaskManager();
