@@ -16,16 +16,12 @@ public class Icarus {
     private Storage store;
     private TaskManager taskManager;
 
-<<<<<<< HEAD
-    public Icarus() {
-=======
     /**
      * Constructs an Icarus chatbot instance.
      * Initializes the user interface, parser, task manager, and storage system,
      * then loads previously saved data and greets the user.
      */
     public Icarus()  {
->>>>>>> branch-A-JavaDoc
         this.ui = new UI();
         this.parser = new Parser();
         this.taskManager = new TaskManager();
