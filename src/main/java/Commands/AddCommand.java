@@ -8,16 +8,13 @@ import Exceptions.EmptyInputException;
 import Exceptions.InvalidInputException;
 import Tasks.Task;
 
-<<<<<<< HEAD
-public class AddCommand extends Command {
-=======
+
 /**
  * Represents an AddCommand command class that adds a new task to the task list.
  * Inherits from Command and provides functionality to process user input,
  * create a new task, and add it to the TaskManager.
  */
 public class AddCommand extends Command{
->>>>>>> branch-A-JavaDoc
     public AddCommand(String userInput) {
         super(userInput);
     }

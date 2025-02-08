@@ -1,3 +1,5 @@
+package Icarus;
+
 import Commands.Command;
 import Essentials.Parser;
 import Essentials.Storage;
@@ -6,7 +8,7 @@ import Essentials.UI;
 
 
 /**
- * Represents the main program for the Icarus chatbot.
+ * Represents the main program for the Icarus.Icarus chatbot.
  * This class manages the interaction between the user and the task manager,
  * handles command parsing and execution, and provides an interface for input and output.
  */
@@ -17,7 +19,7 @@ public class Icarus {
     private TaskManager taskManager;
 
     /**
-     * Constructs an Icarus chatbot instance.
+     * Constructs an Icarus.Icarus chatbot instance.
      * Initializes the user interface, parser, task manager, and storage system,
      * then loads previously saved data and greets the user.
      */
@@ -64,7 +66,7 @@ public class Icarus {
     }
 
     /**
-     * Main method to run the Icarus chatbot.
+     * Main method to run the Icarus.Icarus chatbot.
      *
      * @param args command line arguments (not used in this implementation).
      */
