@@ -9,11 +9,27 @@ import Essentials.UI;
 import Exceptions.InvalidInputException;
 import Tasks.Task;
 
+/**
+ * Represents a MarkCommand command that marks a task as not completed.
+ * Inherits from Command and provides functionality to process user input,
+ * validate the task index, and mark the corresponding task as undone in the TaskManager.
+ */
 public class UnmarkCommand extends Command {
     public UnmarkCommand(String userInput) {
         super(userInput);
     }
 
+    /**
+     * Executes the command by parsing the user input, verifying the task index,
+     * and marking the corresponding task as not completed in the TaskManager.
+     * A confirmation message is displayed upon success.
+     *
+     * @param taskManager the TaskManager containing the task will be marked as not completed.
+     * @param ui the UI to interact with the user.
+     * @param parser the Parser to process the user input (not used in this method).
+     * @param store the Storage for saving or loading task data (not used in this method).
+     * @throws InvalidInputException  if the given index is out of bounds.
+     */
     public void execute(TaskManager taskManager, UI ui, Parser parser, Storage store)
             throws InvalidInputException {
         ArrayList<Task> list = taskManager.getList();

@@ -25,6 +25,10 @@ import Tasks.Events;
 import Tasks.Task;
 import Tasks.ToDos;
 
+/**
+ * A parser class responsible for parsing user input and converting it into commands
+ * and tasks. It also handles file input and date/time parsing.
+ */
 public class Parser {
     private final Pattern hasNumberPattern = Pattern.compile("^(mark|unmark|delete)$");
     private final Pattern hasKeywordPattern = Pattern.compile("^find$");
@@ -35,15 +39,27 @@ public class Parser {
     private final Pattern dateFirstPattern = Pattern.compile("^[0-9]{4}(-[0-9]{2}){2}( [0-9]{2}:[0-9]{2})*$");
     private final Pattern timeFirstPattern = Pattern.compile("^[0-9]{2}:[0-9]{2}( [0-9]{4}(-[0-9]{2}){2})*$");
 
+    /**
+     * Constructs a Parser instance.
+     */
     public Parser() {
     }
 
+    /**
+     * Parses an input string and returns the corresponding command.
+     * Recognises various commands such as "bye", "list", "mark", "unmark", "delete",
+     * and task-related commands. Catches any exceptions thrown when creating commands
+     * or when command given is not recognised.
+     *
+     * @param userInput the input provided by the user.
+     * @return the corresponding command object.
+     */
     public Command parseCommand(String userInput) {
         try {
             if (userInput.equals("bye")) {
                 return new ExitCommand();
             } else if (userInput.equals("list")) {
-                return new ListCommand(userInput);
+                return new ListCommand();
             } else if (hasNumberPattern.matcher(userInput.split(" ")[0]).find()) {
                 if (validUnmarkPattern.matcher(userInput).find()) {
                     return new UnmarkCommand(userInput);
@@ -67,6 +83,16 @@ public class Parser {
         return null;
     }
 
+    /**
+     * Creates a task from a user input string.
+     * The task can be of type "to-do", "deadline", or "event".
+     *
+     * @param userInput the input string representing the task to be created.
+     * @return the created task.
+     * @throws EmptyInputException if the input is missing a description of the task,
+     * keywords, dates or times
+     * @throws InvalidInputException if the input's format is invalid.
+     */
     public Task createTask(String userInput) throws EmptyInputException, InvalidInputException {
         String[] arr = userInput.trim().split(" ", 2);
         String taskType = arr[0];
@@ -82,6 +108,16 @@ public class Parser {
         };
     }
 
+    /**
+     * Parses tasks from a file and designates them to the task manager.
+     *
+     * @param path the path of the file to parse.
+     * @param taskManager the task manager to add the parsed tasks to.
+     * @throws NotACommandException if a task type is invalid.
+     * @throws IOException if there is an issue reading the file.
+     * @throws EmptyInputException if a task contains empty input.
+     * @throws InvalidInputException if a task contains invalid input.
+     */
     public void parseFromFile (Path path, TaskManager taskManager)
             throws NotACommandException, IOException, EmptyInputException, InvalidInputException {
         Scanner s = new Scanner(path);
@@ -103,6 +139,14 @@ public class Parser {
         }
     }
 
+    /**
+     * Parses a date or time string and formats it into a consistent format.
+     * Supports both date-first and time-first formats, and handles invalid inputs.
+     *
+     * @param string the input string representing the date or time.
+     * @return the formatted date/time string.
+     * @throws InvalidInputException if the input string is in an invalid format.
+     */
     public String parseTime(String string) throws InvalidInputException {
         try {
             if (dateFirstPattern.matcher(string).find()) {
@@ -141,7 +185,5 @@ public class Parser {
         } catch (DateTimeParseException e) {
             throw new InvalidInputException();
         }
-
     }
-
 }

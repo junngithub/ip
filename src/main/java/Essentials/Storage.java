@@ -12,6 +12,12 @@ import Exceptions.InvalidInputException;
 import Exceptions.NotACommandException;
 import Tasks.Task;
 
+/**
+ * The Storage class is responsible for handling the loading and saving of task data
+ * from and to a file. It provides functionality to load previously saved task data into
+ * a TaskManager instance and to update the save file with the current task list.
+ * The default save file is located at "{user.home}/iP/data/icarus.txt".
+ */
 public class Storage {
     private Path path;
     public Storage() {
@@ -19,6 +25,13 @@ public class Storage {
         this.path = Path.of(home, "iP", "data", "icarus.txt");
     }
 
+    /**
+     * Loads tasks from the save file into the TaskManager.
+     * Creates the file and necessary directory if it doesn't exist.
+     *
+     * @param taskManager the TaskManager to load tasks into.
+     * @param parser the parser used to read the file.
+     */
     public void loadSave(TaskManager taskManager, Parser parser) {
         boolean fileExists = java.nio.file.Files.exists(path);
         try {
@@ -37,6 +50,12 @@ public class Storage {
         }
     }
 
+    /**
+     * Updates the save file with the current task list.
+     *
+     * @param list the list of tasks to save.
+     * @throws IOException if an error occurs while saving the file.
+     */
     public void updateSave(ArrayList<Task> list) throws IOException {
         FileWriter fw = new FileWriter(path.toString(), false);
         for (Task task : list) {
