@@ -31,11 +31,12 @@ public class AddCommand extends Command{
      * keywords, dates or times
      * @throws InvalidInputException if the user input's format is invalid.
      */
-    public void execute(TaskManager taskManager, UI ui, Parser parser, Storage store)
+    public String execute(TaskManager taskManager, UI ui, Parser parser, Storage store)
             throws EmptyInputException, InvalidInputException {
         Task task = parser.createTask(super.getUserInput());
-        taskManager.addToList(task, true);
-        taskManager.sayNumberOfItems();
+        String response = taskManager.sayTaskAddedToList(task);
+        response += taskManager.sayNumberOfItems();
+        return response;
     }
 
 

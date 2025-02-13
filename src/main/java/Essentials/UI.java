@@ -8,7 +8,7 @@ import java.util.Scanner;
  * in the console for better visual organization.
  */
 public class UI {
-    private final String border = "--------------------------------------------------";
+    private final String border = "--------------------------------------------------\n";
     /**
      * Constructs a UI object.
      */
@@ -16,33 +16,22 @@ public class UI {
     }
 
     /**
-     * Reads a single line of input from the user.
-     *
-     * @return the user input as a String.
-     */
-    public String readCommand() {
-        Scanner scanner = new Scanner(System.in);
-        return scanner.nextLine();
-    }
-
-    /**
      * Displays a greeting message to the user, introducing the program.
      * The message is framed with borders for better visual appearance.
      */
-    public void greet() {
-        String greeting = border +
+    public String greet() {
+        return border +
                 """ 
-                \nGreetings! My name is Icarus.
-                How can I be of service to you today?
+                Greetings! My name is Icarus.
+                How can I be of service to you today?\n
                 """ + border;
-        System.out.println(greeting);
     }
 
     /**
      * Displays a border on the console. This border is used for visual separation
      * of different sections in the UI.
      */
-    public void showBorder() {
-        System.out.println(border);
+    public String showBorder() {
+        return border;
     }
 }

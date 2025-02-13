@@ -23,38 +23,34 @@ public class Icarus {
      * Initializes the user interface, parser, task manager, and storage system,
      * then loads previously saved data and greets the user.
      */
-    public Icarus()  {
+    public Icarus() {
         this.ui = new UI();
         this.parser = new Parser();
         this.taskManager = new TaskManager();
         this.store = new Storage();
         store.loadSave(taskManager, parser);
-        ui.greet();
-        run();
     }
 
     /**
-     * Main loop of the chatbot. Continuously reads commands from the user,
+     * Icarus.Icarus.Icarus.Main loop of the chatbot. Continuously reads commands from the user,
      * parses and executes them, and exits when the user provides an exit command.
      */
-    private void run() {
-        boolean isExiting = false;
-        while (!isExiting) {
-            try {
-                String commandRead = ui.readCommand();
-                ui.showBorder();
-                Command command = parser.parseCommand(commandRead);
-                if (command != null) {
-                    command.execute(taskManager, ui, parser, store);
-                    isExiting = command.isExiting();
-                }
-            } catch (Exception e) {
-                System.out.println(e.toString());
-            } finally {
-                ui.showBorder();
-            }
+    public String getResponse(String userInput) {
+        StringBuilder response = new StringBuilder();
+        try {
+            Command command = parser.parseCommand(userInput);
+            assert command != null;
+            response.append(ui.showBorder());
+            response.append(command.execute(taskManager, ui, parser, store));
+        } catch (Exception e) {
+            response.append(e.toString());
+        } finally {
+            response.append(ui.showBorder());
         }
+        return response.toString();
     }
+
+
 
     /**
      * Echoes the user input to the console with a newline after it.
@@ -64,13 +60,5 @@ public class Icarus {
     private void echo(String userInput) {
         System.out.println(userInput + "\n");
     }
-
-    /**
-     * Main method to run the Icarus.Icarus chatbot.
-     *
-     * @param args command line arguments (not used in this implementation).
-     */
-    public static void main(String[] args) {
-        Icarus chatbot = new Icarus();
-    }
 }
+

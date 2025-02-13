@@ -21,11 +21,11 @@ public class EmptyInputException extends Exception{
         super();
         this.taskType = taskType;
         switch (problem) {
-        case "description" -> this.problem = " description cannot be empty.";
-        case "number" -> this.problem = " requires a number.";
-        case "missing by" -> this.problem = " task requires '/by'.";
-        case "missing from" -> this.problem = " task requires '/from'.";
-        case "missing to" -> this.problem = " task requires '/to'.";
+        case "description" -> this.problem = " description cannot be empty.\n";
+        case "number" -> this.problem = " requires a number.\n";
+        case "missing by" -> this.problem = " task requires '/by'.\n";
+        case "missing from" -> this.problem = " task requires '/from'.\n";
+        case "missing to" -> this.problem = " task requires '/to'.\n";
         }
     }
 

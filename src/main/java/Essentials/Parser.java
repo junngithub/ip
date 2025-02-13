@@ -14,6 +14,7 @@ import Commands.Command;
 import Commands.DeleteCommand;
 import Commands.ExitCommand;
 import Commands.FindCommand;
+import Commands.InvalidCommand;
 import Commands.ListCommand;
 import Commands.MarkCommand;
 import Commands.UnmarkCommand;
@@ -61,15 +62,7 @@ public class Parser {
             } else if (userInput.equals("list")) {
                 return new ListCommand();
             } else if (hasNumberPattern.matcher(userInput.split(" ")[0]).find()) {
-                if (validUnmarkPattern.matcher(userInput).find()) {
-                    return new UnmarkCommand(userInput);
-                } else if (validMarkPattern.matcher(userInput).find()) {
-                    return new MarkCommand(userInput);
-                } else if (validDeletePattern.matcher(userInput).find()) {
-                    return new DeleteCommand(userInput);
-                } else {
-                    throw new EmptyInputException(userInput.split(" ")[0], "number");
-                }
+                return parseHasNumberPatternCommand(userInput);
             } else if (taskPattern.matcher(userInput).find()) {
                 return new AddCommand(userInput);
             } else if (hasKeywordPattern.matcher(userInput.split(" ")[0]).find()) {
@@ -78,9 +71,20 @@ public class Parser {
                 throw new NotACommandException();
             }
         } catch (NotACommandException | EmptyInputException exception) {
-            System.out.println(exception);
+            return new InvalidCommand(exception.toString());
         }
-        return null;
+    }
+
+    private Command parseHasNumberPatternCommand(String userInput) throws  EmptyInputException {
+        if (validUnmarkPattern.matcher(userInput).find()) {
+            return new UnmarkCommand(userInput);
+        } else if (validMarkPattern.matcher(userInput).find()) {
+            return new MarkCommand(userInput);
+        } else if (validDeletePattern.matcher(userInput).find()) {
+            return new DeleteCommand(userInput);
+        } else {
+            throw new EmptyInputException(userInput.split(" ")[0], "number");
+        }
     }
 
     /**
@@ -130,7 +134,7 @@ public class Parser {
                 throw new NotACommandException();
             }
             String done = lineArr[0];
-            taskManager.addToList(task, false);
+            taskManager.addToList(task);
             if (done.equals("1")) {
                 task.markDone();
             } else if (!done.equals("0")) {
@@ -150,40 +154,48 @@ public class Parser {
     public String parseTime(String string) throws InvalidInputException {
         try {
             if (dateFirstPattern.matcher(string).find()) {
-                String[] arr = string.split(" ");
-                LocalDate date = LocalDate.parse(arr[0]);
-                String dateString = date.format(DateTimeFormatter.ofPattern("MMM d yyyy"));
-                if (arr.length == 2) {
-                    String time = arr[1];
-                    if (Pattern.compile("[0-9]{2}:[0-9]{2}").matcher(time).find()) {
-                        DateTimeFormatter originalFormat = DateTimeFormatter.ofPattern("HH:mm");
-                        DateTimeFormatter intendedFormat = DateTimeFormatter.ofPattern("hh:mm a");
-                        LocalTime originalTime = LocalTime.parse(time, originalFormat);
-                        return dateString + ", " + originalTime.format(intendedFormat);
-                    }
-                    return dateString + ", " + time;
-                }
-                return dateString;
+                return parseDateFirstPattern(string);
             } else if (timeFirstPattern.matcher(string).find()) {
-                String[] arr = string.split(" ");
-                DateTimeFormatter originalFormat = DateTimeFormatter.ofPattern("HH:mm");
-                DateTimeFormatter intendedFormat = DateTimeFormatter.ofPattern("hh:mm a");
-                LocalTime originalTime = LocalTime.parse(arr[0], originalFormat);
-                String timeString = originalTime.format(intendedFormat);
-                if (arr.length == 2) {
-                    String dateString = arr[1];
-                    if (Pattern.compile("[0-9]{4}(-[0-9]{2}){2}").matcher(dateString).find()) {
-                        LocalDate date = LocalDate.parse(dateString);
-                        dateString = date.format(DateTimeFormatter.ofPattern("MMM d yyyy"));
-                        return timeString + ", " + dateString;
-                    }
-                    return dateString + ", " + timeString;
-                }
-                return timeString;
+                return parseTimeFirstPattern(string);
             }
             return string;
         } catch (DateTimeParseException e) {
             throw new InvalidInputException();
         }
+    }
+
+    private String parseDateFirstPattern(String string) throws DateTimeParseException {
+        String[] arr = string.split(" ");
+        LocalDate date = LocalDate.parse(arr[0]);
+        String dateString = date.format(DateTimeFormatter.ofPattern("MMM d yyyy"));
+        if (arr.length != 2) {
+            return dateString;
+        }
+        String time = arr[1];
+        if (Pattern.compile("[0-9]{2}:[0-9]{2}").matcher(time).find()) {
+            DateTimeFormatter originalFormat = DateTimeFormatter.ofPattern("HH:mm");
+            DateTimeFormatter intendedFormat = DateTimeFormatter.ofPattern("hh:mm a");
+            LocalTime originalTime = LocalTime.parse(time, originalFormat);
+            return dateString + ", " + originalTime.format(intendedFormat);
+        }
+        return dateString + ", " + time;
+    }
+
+    private String parseTimeFirstPattern(String string) throws DateTimeParseException {
+        String[] arr = string.split(" ");
+        DateTimeFormatter originalFormat = DateTimeFormatter.ofPattern("HH:mm");
+        DateTimeFormatter intendedFormat = DateTimeFormatter.ofPattern("hh:mm a");
+        LocalTime originalTime = LocalTime.parse(arr[0], originalFormat);
+        String timeString = originalTime.format(intendedFormat);
+        if (arr.length != 2) {
+            return timeString;
+        }
+        String dateString = arr[1];
+        if (Pattern.compile("[0-9]{4}(-[0-9]{2}){2}").matcher(dateString).find()) {
+            LocalDate date = LocalDate.parse(dateString);
+            dateString = date.format(DateTimeFormatter.ofPattern("MMM d yyyy"));
+            return timeString + ", " + dateString;
+        }
+        return dateString + ", " + timeString;
     }
 }

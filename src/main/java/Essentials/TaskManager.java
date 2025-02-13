@@ -24,8 +24,8 @@ public class TaskManager {
      * Displays the number of tasks currently in the list.
      * Outputs a message indicating how many tasks are in the list.
      */
-    public void sayNumberOfItems() {
-        System.out.println("You have " + list.size() + " item(s) in your list.");
+    public String sayNumberOfItems() {
+        return "You have " + list.size() + " item(s) in your list.\n";
     }
 
     /**
@@ -33,13 +33,14 @@ public class TaskManager {
      * with the task details is printed.
      *
      * @param task the task to be added to the list.
-     * @param toCall whether to print a confirmation message after adding the task.
      */
-    public void addToList(Task task, boolean toCall) {
+    public String sayTaskAddedToList(Task task) {
         list.add(task);
-        if (toCall) {
-            System.out.println("I have added: \n" + task.toString() + "\n");
-        }
+        return "I have added: \n" + task.toString() + "\n";
+    }
+
+    public void addToList(Task task) {
+        list.add(task);
     }
 
     /**

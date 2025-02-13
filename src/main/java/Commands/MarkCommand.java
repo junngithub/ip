@@ -30,7 +30,7 @@ public class MarkCommand extends Command {
      * @param store the Storage for saving or loading task data (not used in this method).
      * @throws InvalidInputException  if the given index is out of bounds.
      */
-    public void execute(TaskManager taskManager, UI ui, Parser parser, Storage store)
+    public String execute(TaskManager taskManager, UI ui, Parser parser, Storage store)
             throws InvalidInputException {
         ArrayList<Task> list = taskManager.getList();
         String[] arr = super.getUserInput().split(" ", 2);
@@ -41,8 +41,7 @@ public class MarkCommand extends Command {
         }
         Task task = list.get(i - 1);
         task.markDone();
-        String message = "Very well, I have marked this as completed: \n" + task;
-        System.out.println(message);
+        return "Very well, I have marked this as completed: \n" + task;
     }
 }
 

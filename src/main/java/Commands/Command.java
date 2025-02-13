@@ -37,7 +37,7 @@ public abstract class Command {
      * @param store the {@link Storage} to manage task saving/loading (if needed by the command).
      * @throws Exception if an error occurs during command execution.
      */
-    public abstract void execute (TaskManager taskManager, UI ui, Parser parser, Storage store)
+    public abstract String execute (TaskManager taskManager, UI ui, Parser parser, Storage store)
             throws Exception;
 
     /**

@@ -22,6 +22,6 @@ public class NotACommandException extends Exception {
      */
     @Override
     public String toString() {
-        return "Apologies, I am unable to assist with that request.";
+        return "Apologies, I am unable to assist with that request.\n";
     }
 }

@@ -29,11 +29,10 @@ public class ExitCommand extends Command {
      * @param store the Storage for saving data in the task list to a specified file.
      * @throws IOException if an error occurs while saving the task list to the file.
      */
-    public void execute(TaskManager taskManager, UI ui, Parser parser,  Storage store)
+    public String execute(TaskManager taskManager, UI ui, Parser parser,  Storage store)
             throws IOException {
         store.updateSave(taskManager.getList());
-        String bye = "Bye! See you next time, my friend.";
-        System.out.println(bye);
+        return  "Bye! See you next time, my friend.\n";
     }
 
     /**

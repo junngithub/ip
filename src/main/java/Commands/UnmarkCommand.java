@@ -30,7 +30,7 @@ public class UnmarkCommand extends Command {
      * @param store the Storage for saving or loading task data (not used in this method).
      * @throws InvalidInputException  if the given index is out of bounds.
      */
-    public void execute(TaskManager taskManager, UI ui, Parser parser, Storage store)
+    public String execute(TaskManager taskManager, UI ui, Parser parser, Storage store)
             throws InvalidInputException {
         ArrayList<Task> list = taskManager.getList();
         String[] arr = super.getUserInput().split(" ", 2);
@@ -41,7 +41,6 @@ public class UnmarkCommand extends Command {
         }
         Task task = list.get(i - 1);
         task.markUndone();
-        String message = "Sure, I have marked this as unfinished: \n" + task;
-        System.out.println(message);
+        return "Sure, I have marked this as unfinished: \n" + task;
     }
 }

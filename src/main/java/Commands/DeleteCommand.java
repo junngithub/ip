@@ -34,7 +34,7 @@ public class DeleteCommand extends Command {
      * @param store the Storage for saving or loading task data (not used in this method).
      * @throws InvalidInputException if the given index is out of bounds.
      */
-    public void execute(TaskManager taskManager, UI ui, Parser parser, Storage store)
+    public String execute(TaskManager taskManager, UI ui, Parser parser, Storage store)
             throws InvalidInputException {
         ArrayList<Task> list = taskManager.getList();
         String[] arr = super.getUserInput().split(" ", 2);
@@ -44,9 +44,8 @@ public class DeleteCommand extends Command {
             throw new InvalidInputException(i, size);
         }
         Task task = list.remove(i - 1);
-        String message = "I have removed this item: \n" + task + "\n";
-        System.out.println(message);
-        taskManager.sayNumberOfItems();
-
+        String response = "I have removed this item: \n" + task + "\n";
+        response += taskManager.sayNumberOfItems();
+        return response;
     }
 }
