@@ -130,16 +130,21 @@ public class Parser {
             String[] lineArr = line.split(" ", 2);
             String taskString = lineArr[1];
             Task task = createTask(taskString);
-            if (task == null) {
-                throw new NotACommandException();
-            }
-            String done = lineArr[0];
-            taskManager.addToList(task);
-            if (done.equals("1")) {
-                task.markDone();
-            } else if (!done.equals("0")) {
-                throw new NotACommandException();
-            }
+            String isDone = lineArr[0];
+            addTaskFromFile(task, taskManager, isDone);
+        }
+    }
+
+    private void addTaskFromFile(Task task, TaskManager taskManager, String isDone)
+            throws NotACommandException {
+        if (task == null) {
+            throw new NotACommandException();
+        }
+        taskManager.addToList(task);
+        if (isDone.equals("1")) {
+            task.markDone();
+        } else if (!isDone.equals("0")) {
+            throw new NotACommandException();
         }
     }
 
@@ -194,7 +199,7 @@ public class Parser {
         if (Pattern.compile("[0-9]{4}(-[0-9]{2}){2}").matcher(dateString).find()) {
             LocalDate date = LocalDate.parse(dateString);
             dateString = date.format(DateTimeFormatter.ofPattern("MMM d yyyy"));
-            return timeString + ", " + dateString;
+            return dateString + ", " + timeString ;
         }
         return dateString + ", " + timeString;
     }

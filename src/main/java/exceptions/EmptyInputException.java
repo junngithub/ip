@@ -28,6 +28,7 @@ public class EmptyInputException extends Exception {
         case "missing to" -> this.problem = " task requires '/to'.\n";
         default -> this.problem = "";
         }
+        assert !this.problem.isEmpty();
     }
 
     /**
