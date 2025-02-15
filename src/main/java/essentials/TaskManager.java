@@ -35,11 +35,13 @@ public class TaskManager {
      * @param task the task to be added to the list.
      */
     public String sayTaskAddedToList(Task task) {
+        assert task != null;
         list.add(task);
         return "I have added: \n" + task.toString() + "\n";
     }
 
     public void addToList(Task task) {
+        assert task != null;
         list.add(task);
     }
 

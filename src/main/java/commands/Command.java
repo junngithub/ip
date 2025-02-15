@@ -40,16 +40,6 @@ public abstract class Command {
     public abstract String execute(TaskManager taskManager, UI ui, Parser parser, Storage store)
             throws Exception;
 
-    /**
-     * Determines whether the command indicates that the program should exit.
-     * Default implementation returns false, meaning the program does not exit.
-     * Subclasses may override this method to return true if the command requires an exit.
-     *
-     * @return true if the command ends the program, otherwise false.
-     */
-    public boolean isExiting() {
-        return false;
-    }
     public String getUserInput() {
         return userInput;
     }

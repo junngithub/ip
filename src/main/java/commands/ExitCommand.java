@@ -34,14 +34,4 @@ public class ExitCommand extends Command {
         store.updateSave(taskManager.getList());
         return "Bye! See you next time, my friend.\n";
     }
-
-    /**
-     * Indicates that the program should end.
-     *
-     * @return true.
-     */
-    @Override
-    public boolean isExiting() {
-        return true;
-    }
 }
