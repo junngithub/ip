@@ -17,6 +17,7 @@ public abstract class Task {
      * @param taskType the type of the task (e.g., "to-do", "deadline", "event").
      */
     public Task(String task, String taskType) {
+        assert !task.isEmpty();
         this.task = task;
         this.isDone = false;
         this.type = taskType;
