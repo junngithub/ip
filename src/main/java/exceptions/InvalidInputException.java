@@ -9,6 +9,8 @@ public class InvalidInputException extends Exception {
     private int index;
     private int size;
     private boolean isDate;
+    private boolean isDueToSet;
+    private String userInput = "";
 
     /**
      * Constructs an InvalidInputException for invalid access to a task list.
@@ -34,6 +36,16 @@ public class InvalidInputException extends Exception {
     }
 
     /**
+     * TODO
+     * @param userInput TODO
+     * @param isDueToSet TODO
+     */
+    public InvalidInputException(String userInput, boolean isDueToSet) {
+        this.userInput = userInput;
+        this.isDueToSet = isDueToSet;
+    }
+
+    /**
      * Returns a string representation of the exception, providing details about the error.
      * If the error is related to date/time, it will indicate the issue with the provided
      * date or time. If it is related to accessing an invalid task,
@@ -46,6 +58,11 @@ public class InvalidInputException extends Exception {
         String header = "I am unable to act on this request.\n";
         if (isDate) {
             return header + "Date and/or Time provided is invalid.\n";
+        } else if (!userInput.isEmpty()) {
+            if (isDueToSet) {
+                return header + this.userInput + " is not a valid command to be altered.";
+            }
+            return header + this.userInput + " is already a command.";
         }
         return header + "You are trying to access item number " + this.index
                 + ".\nBut there are " + this.size + " item(s) in your list.\n";

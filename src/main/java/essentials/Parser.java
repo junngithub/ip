@@ -6,7 +6,10 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import commands.AddCommand;
@@ -17,6 +20,8 @@ import commands.FindCommand;
 import commands.InvalidCommand;
 import commands.ListCommand;
 import commands.MarkCommand;
+import commands.SetCommand;
+import commands.ShowSyntaxCommand;
 import commands.UnmarkCommand;
 import exceptions.EmptyInputException;
 import exceptions.InvalidInputException;
@@ -31,12 +36,19 @@ import tasks.ToDos;
  * and tasks. It also handles file input and date/time parsing.
  */
 public class Parser {
-    private final Pattern hasNumberPattern = Pattern.compile("^(mark|unmark|delete)$");
-    private final Pattern hasKeywordPattern = Pattern.compile("^find$");
-    private final Pattern validMarkPattern = Pattern.compile("^mark [1-9][0-9]*$");
-    private final Pattern validUnmarkPattern = Pattern.compile("^unmark [1-9][0-9]*$");
-    private final Pattern validDeletePattern = Pattern.compile("^delete [1-9][0-9]*$");
-    private final Pattern taskPattern = Pattern.compile("^(todo|deadline|event)");
+    private HashMap<String, String> syntaxMap;
+    private Pattern validFindPattern = Pattern.compile("^find");
+    private Pattern validListPattern = Pattern.compile("^list$");
+    private Pattern validMarkPattern = Pattern.compile("^mark [1-9][0-9]*$");
+    private Pattern validUnmarkPattern = Pattern.compile("^unmark [1-9][0-9]*$");
+    private Pattern validDeletePattern = Pattern.compile("^delete [1-9][0-9]*$");
+    private Pattern hasNumberPattern = Pattern.compile("^(mark|unmark|delete)$");
+    private Pattern taskPattern = Pattern.compile("^(todo|deadline|event)");
+    private Pattern hasKeywordPattern = Pattern.compile("^(find|set)$");
+    private final Pattern validSetPattern =
+            Pattern.compile("^set (todo|deadline|event|list|find|unmark|mark|delete)");
+    private final Pattern validTimePattern = Pattern.compile("[0-9]{2}:[0-9]{2}");
+    private final Pattern validDatePattern = Pattern.compile("[0-9]{4}(-[0-9]{2}){2}");
     private final Pattern dateFirstPattern = Pattern.compile("^[0-9]{4}(-[0-9]{2}){2}( [0-9]{2}:[0-9]{2})*$");
     private final Pattern timeFirstPattern = Pattern.compile("^[0-9]{2}:[0-9]{2}( [0-9]{4}(-[0-9]{2}){2})*$");
 
@@ -44,6 +56,7 @@ public class Parser {
      * Constructs a Parser instance.
      */
     public Parser() {
+        this.syntaxMap = new HashMap<>();
     }
 
     /**
@@ -59,19 +72,32 @@ public class Parser {
         try {
             if (userInput.equals("bye")) {
                 return new ExitCommand();
-            } else if (userInput.equals("list")) {
+            } else if (userInput.equals("syntax")) {
+                return new ShowSyntaxCommand();
+            } else if (validListPattern.matcher(userInput).find()) {
                 return new ListCommand();
             } else if (hasNumberPattern.matcher(userInput.split(" ")[0]).find()) {
                 return parseHasNumberPatternCommand(userInput);
             } else if (taskPattern.matcher(userInput).find()) {
                 return new AddCommand(userInput);
             } else if (hasKeywordPattern.matcher(userInput.split(" ")[0]).find()) {
-                return new FindCommand(userInput);
+                return parseHasKeywordCommand(userInput);
             } else {
                 throw new NotACommandException();
             }
-        } catch (NotACommandException | EmptyInputException exception) {
+        } catch (NotACommandException | EmptyInputException | InvalidInputException exception) {
             return new InvalidCommand(exception.toString());
+        }
+    }
+
+    private Command parseHasKeywordCommand(String userInput) throws InvalidInputException {
+        if (validFindPattern.matcher(userInput).find()) {
+            return new FindCommand(userInput);
+        }
+        if (validSetPattern.matcher(userInput).find()) {
+            return new SetCommand(userInput);
+        } else {
+            throw new InvalidInputException(userInput.split(" ")[1], false);
         }
     }
 
@@ -99,7 +125,15 @@ public class Parser {
      */
     public Task createTask(String userInput) throws EmptyInputException, InvalidInputException {
         String[] arr = userInput.trim().split(" ", 2);
-        String taskType = arr[0];
+        String commandString = arr[0];
+        String taskType = "";
+        if (syntaxMap.get("todo").equals(commandString)) {
+            taskType = "todo";
+        } else if (syntaxMap.get("deadline").equals(commandString)) {
+            taskType = "deadline";
+        } else if (syntaxMap.get("event").equals(commandString)) {
+            taskType = "event";
+        }
         if (arr.length == 1 || arr[1].trim().charAt(0) == '/') {
             throw new EmptyInputException(taskType, "description");
         }
@@ -110,6 +144,19 @@ public class Parser {
         case "todo" -> ToDos.of(string);
         default -> null;
         };
+    }
+
+    /**
+     * TODO
+     * @return TODO
+     */
+    public String saySyntax() {
+        Set<Map.Entry<String, String>> entries = this.syntaxMap.entrySet();
+        StringBuilder syntax = new StringBuilder();
+        for (Map.Entry<String, String> entry: entries) {
+            syntax.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
+        }
+        return syntax.toString();
     }
 
     /**
@@ -133,6 +180,71 @@ public class Parser {
             String isDone = lineArr[0];
             addTaskFromFile(task, taskManager, isDone);
         }
+    }
+
+    /**
+     * TODO
+     * @param path TODO
+     * @throws IOException TODO
+     * @throws InvalidInputException TODO
+     */
+    public void parseFromFile(Path path) throws IOException, InvalidInputException {
+        Scanner s = new Scanner(path);
+        while (s.hasNext()) {
+            String line = s.nextLine();
+            String[] lineArr = line.split(" ", 2);
+            String keyword = lineArr[0];
+            String preferredKeyword = lineArr[1];
+            updateSyntax(keyword, preferredKeyword);
+        }
+
+    }
+
+    /**
+     * TODO
+     * @param keyword TODO
+     * @param preferredKeyword TODO
+     * @throws InvalidInputException TODO
+     */
+    public void updateSyntax(String keyword, String preferredKeyword) throws InvalidInputException {
+        // ensure no duplicates
+        if (syntaxMap.containsValue(preferredKeyword)) {
+            throw new InvalidInputException(preferredKeyword, false);
+        }
+        this.syntaxMap.put(keyword, preferredKeyword);
+        if (keyword.equals(preferredKeyword)) {
+            return;
+        }
+        switch (keyword) {
+        case "todo", "deadline", "event" -> taskPattern = Pattern.compile("^(" + syntaxMap.get("todo") + "|"
+                + syntaxMap.get("deadline") + "|" + syntaxMap.get("event") + ")");
+        case "find" -> {
+            validFindPattern = Pattern.compile("^" + preferredKeyword);
+            hasKeywordPattern = Pattern.compile("^(" + preferredKeyword + "|set)$");
+        }
+        case "list" -> validListPattern = Pattern.compile("^" + preferredKeyword + "$");
+        case "delete" -> {
+            updateHasNumberPattern();
+            validDeletePattern = Pattern.compile("^" + preferredKeyword + " [1-9][0-9]*$");
+        }
+        case "mark" -> {
+            updateHasNumberPattern();
+            validMarkPattern = Pattern.compile("^" + preferredKeyword + " [1-9][0-9]*$");
+        }
+        case "unmark" -> {
+            updateHasNumberPattern();
+            validUnmarkPattern = Pattern.compile("^" + preferredKeyword + " [1-9][0-9]*$");
+        }
+        default -> {
+            // should not reach this point i.e. no other keywords should be added or manipulated
+            assert true;
+        }
+        }
+    }
+
+    private void updateHasNumberPattern() {
+        hasNumberPattern = Pattern.compile("^(" + syntaxMap.get("mark") + "|" + syntaxMap.get("unmark")
+                + "|" + syntaxMap.get("delete") + ")$");
     }
 
     private void addTaskFromFile(Task task, TaskManager taskManager, String isDone)
@@ -177,7 +289,7 @@ public class Parser {
             return dateString;
         }
         String time = arr[1];
-        if (Pattern.compile("[0-9]{2}:[0-9]{2}").matcher(time).find()) {
+        if (validTimePattern.matcher(time).find()) {
             DateTimeFormatter originalFormat = DateTimeFormatter.ofPattern("HH:mm");
             DateTimeFormatter intendedFormat = DateTimeFormatter.ofPattern("hh:mm a");
             LocalTime originalTime = LocalTime.parse(time, originalFormat);
@@ -196,11 +308,15 @@ public class Parser {
             return timeString;
         }
         String dateString = arr[1];
-        if (Pattern.compile("[0-9]{4}(-[0-9]{2}){2}").matcher(dateString).find()) {
+        if (validDatePattern.matcher(dateString).find()) {
             LocalDate date = LocalDate.parse(dateString);
             dateString = date.format(DateTimeFormatter.ofPattern("MMM d yyyy"));
-            return dateString + ", " + timeString ;
+            return dateString + ", " + timeString;
         }
         return dateString + ", " + timeString;
+    }
+
+    public HashMap<String, String> getSyntaxMap() {
+        return this.syntaxMap;
     }
 }

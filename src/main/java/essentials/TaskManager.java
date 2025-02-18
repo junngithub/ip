@@ -12,6 +12,7 @@ import tasks.Task;
 public class TaskManager {
     private ArrayList<Task> list;
 
+
     /**
      * Constructs a TaskManager with an empty task list.
      * Initializes the list where tasks will be stored.
@@ -40,6 +41,10 @@ public class TaskManager {
         return "I have added: \n" + task.toString() + "\n";
     }
 
+    /**
+     * TODO
+     * @param task TODO
+     */
     public void addToList(Task task) {
         assert task != null;
         list.add(task);

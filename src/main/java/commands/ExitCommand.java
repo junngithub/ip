@@ -31,7 +31,8 @@ public class ExitCommand extends Command {
      */
     public String execute(TaskManager taskManager, UI ui, Parser parser, Storage store)
             throws IOException {
-        store.updateSave(taskManager.getList());
+        store.updateTasks(taskManager.getList());
+        store.updateSyntaxPreferences(parser);
         return "Bye! See you next time, my friend.\n";
     }
 }

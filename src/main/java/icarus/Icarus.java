@@ -28,7 +28,8 @@ public class Icarus {
         this.parser = new Parser();
         this.taskManager = new TaskManager();
         this.store = new Storage();
-        store.loadSave(taskManager, parser);
+        store.loadSyntaxPreferences(parser);
+        store.loadSavedTasks(taskManager, parser);
     }
 
 
