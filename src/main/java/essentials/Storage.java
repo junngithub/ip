@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Map;
@@ -56,6 +55,11 @@ public class Storage {
             System.out.println("something went wrong :(");
         }
     }
+
+    /**
+     * TODO
+     * @throws IOException tODO
+     */
 
     public void loadDefaultSyntax() throws IOException {
         FileWriter fw = new FileWriter(syntaxPath);

@@ -1,5 +1,8 @@
 package icarus;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import essentials.UI;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -55,11 +58,16 @@ public class MainWindow extends AnchorPane {
                 DialogBox.getIcarusDialog(response, icarusImage)
         );
         userInput.clear();
+        if (input.equals("bye")) {
+            exit();
+        }
     }
 
-    @FXML
-    public void exitApplication(ActionEvent event) {
-        Platform.exit();
+    private void exit() {
+        new Timer(true).schedule(new TimerTask() {
+            public void run () {
+                Platform.exit();
+            }
+        }, 1000);
     }
-
 }

@@ -4,10 +4,15 @@ Have you ever found yourself completing a task way too close to a deadline and w
 Icarus is a chatbot that helps you manage your tasks.
 
 ## Icarus GUI Preview
-[icarus preview](Ui.png)
+![icarus preview](Ui.png)
 
-## Pre-requisites
+## Get Started
+### Pre-requisites
 - Java version 17
+
+### Installation
+run the JAR file as follows:
+`java -jar icarus.jar`
 
 ## Summary of Features
 Icarus allows you to
@@ -34,6 +39,7 @@ Icarus will then reply in the format
 - number of items in the list 
 
 Example: `todo some task`
+
 Expected output:
 ```
 I have added:
@@ -43,6 +49,7 @@ You have 1 item(s) in your list
 ```
 
 Example: `deadline another task /by 18:00 2025-02-28`
+
 Expected output:
 ```
 I have added:
@@ -52,6 +59,7 @@ You have 1 item(s) in your list
 ```
 
 Example: `event this task /from 2025-02-28 18:00 /to 19:00`
+
 Expected output:
 ```
 I have added:
@@ -69,6 +77,7 @@ Icarus will reply in the format
 - the list of tasks
 
 Example: `list`
+
 Expected output:
 ```
 Here is your list:
@@ -85,6 +94,7 @@ Icarus will then reply in the format
 - the task marked/unmarked
 
 Example: `mark 1`
+
 Expected output:
 ```
 Very well, I have marked this as completed:
@@ -101,6 +111,7 @@ Icarus will then reply in the format
 - number of items in the list
 
 Example: `delete 1`
+
 Expected output:
 ```
 I have removed this item:
@@ -117,6 +128,7 @@ Icarus will then reply in the format
 - the list of tasks that match the description
 
 Example: `find task`
+
 Expected output:
 ```
 Here is a list of Tasks that match your query:
@@ -134,6 +146,7 @@ Icarus will then reply in the format
 - the list of syntax mappings
 
 Example: `set todo t`
+
 Expected output:
 ```
 Here is your updated syntax:
@@ -157,6 +170,7 @@ Icarus will reply in the format
 - reminder to adhere to the format for adding task commands
 
 Example: `set todo t`
+
 Expected output:
 ```
 Here's your syntax:

@@ -40,7 +40,7 @@ public class DialogBox extends HBox {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Circle cir2 = new Circle(50,50, 40);
+        Circle cir2 = new Circle(50, 50, 40);
         cir2.setFill(new ImagePattern(img));
         dialog.setText(text);
         displayPicture.setCenter(cir2);

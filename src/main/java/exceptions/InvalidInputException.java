@@ -46,6 +46,11 @@ public class InvalidInputException extends Exception {
         this.isDuplicateCommand = isDueToDuplicate;
     }
 
+    /**
+     * TODO
+     * @param userInput TODO
+     */
+
     public InvalidInputException(String userInput) {
         this.userInput = userInput;
         this.isDuplicateTask = true;

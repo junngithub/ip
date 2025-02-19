@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
 
@@ -79,7 +78,7 @@ public class ParserTest {
     @Test
     public void testParseInvalidCommand() {
         Command command = parser.parseCommand("invalidCommand 1");
-        assertInstanceOf(InvalidCommand.class, command, "Command should be null for invalid input");
+        assertInstanceOf(InvalidCommand.class, command, "Command should be instance of InvalidCommand");
     }
 
     @Test
@@ -94,7 +93,7 @@ public class ParserTest {
     public void testParseTimeFirstFormat() throws InvalidInputException {
         String userInput = "14:00 2025-02-08";
         String formattedTime = parser.parseTime(userInput);
-        assertEquals("02:00 pm, Feb 8 2025", formattedTime,
+        assertEquals("Feb 8 2025, 02:00 pm", formattedTime,
                 "The time should be parsed and formatted correctly");
     }
 

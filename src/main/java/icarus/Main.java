@@ -11,7 +11,6 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Pair;
-import tasks.Task;
 
 /**
  * TODO
@@ -42,7 +41,7 @@ public class Main extends Application {
     }
 
     @Override
-    public void stop(){
+    public void stop() {
         Pair<Pair<Storage, Parser>, TaskManager> pairs = icarus.prepareExit();
         Storage store = pairs.getKey().getKey();
         Parser parser = pairs.getKey().getValue();
@@ -53,5 +52,6 @@ public class Main extends Application {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
     }
 }
