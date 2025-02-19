@@ -77,4 +77,14 @@ public abstract class Task {
     public void markUndone() {
         this.isDone = false;
     }
+
+    public String getTask() {
+        return task;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        assert other instanceof Task;
+        return this.task.equals(((Task) other).getTask());
+    }
 }

@@ -33,7 +33,7 @@ public class AddCommand extends Command {
      */
     public String execute(TaskManager taskManager, UI ui, Parser parser, Storage store)
             throws EmptyInputException, InvalidInputException {
-        Task task = parser.createTask(super.getUserInput());
+        Task task = parser.createTask(super.getUserInput(), false);
         String response = "I have added: \n" + ui.showBorder() + taskManager.sayTaskAddedToList(task);
         response += ui.showBorder();
         response += taskManager.sayNumberOfItems();

@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
@@ -113,8 +114,8 @@ public class ParserTest {
 
     @Test
     public void testParseFromNonExistentFile() {
-        Path path = Path.of("tasks.txt");
-        assertThrows(IOException.class, () -> parser.parseFromFile(path, taskManager),
+        File file = new File("tasks.txt");
+        assertThrows(IOException.class, () -> parser.parseFromFile(file, taskManager),
                 "IOException should be thrown for invalid file path");
     }
 

@@ -30,7 +30,7 @@ public class ListCommand extends Command {
     public String execute(TaskManager taskManager, UI ui, Parser parser, Storage store) {
         ArrayList<Task> list = taskManager.getList();
         if (list.isEmpty()) {
-            return "You have no items in your list.";
+            return "You have no items in your list.\n";
         } else {
             StringBuilder response = new StringBuilder("Here is your list:\n");
             response.append(ui.showBorder());

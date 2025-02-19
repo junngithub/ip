@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
@@ -21,16 +22,15 @@ import tasks.Task;
  * The default save file is located at "{user.home}/iP/data/icarus.txt".
  */
 public class Storage {
-    private Path tasksPath;
-    private Path syntaxPath;
+    private String tasksPath;
+    private String syntaxPath;
 
     /**
      * TODO
      */
     public Storage() {
-        String home = System.getProperty("user.home");
-        this.tasksPath = Path.of(home, "iP", "data", "tasks.txt");
-        this.syntaxPath = Path.of(home, "iP", "data", "syntax.txt");
+        this.tasksPath = "data/tasks.txt";
+        this.syntaxPath = "data/syntax.txt";
     }
 
     /**
@@ -41,15 +41,14 @@ public class Storage {
      * @param parser the parser used to read the file.
      */
     public void loadSavedTasks(TaskManager taskManager, Parser parser) {
-        boolean fileExists = Files.exists(tasksPath);
+        File file = new File(tasksPath);
+        boolean fileExists = file.exists();
         try {
             if (fileExists) {
-                parser.parseFromFile(tasksPath, taskManager);
+                parser.parseFromFile(file, taskManager);
             } else {
-                String home = System.getProperty("user.home");
-                Path directory = Files.createDirectories(Path.of(home, "iP", "data"));
-                File f = new File(directory + "\\tasks.txt");
-                f.createNewFile();
+                file.getParentFile().mkdirs();
+                Files.createFile(Paths.get(tasksPath));
             }
         } catch (EmptyInputException | NotACommandException | InvalidInputException e) {
             System.out.println("file corrupted");
@@ -58,17 +57,36 @@ public class Storage {
         }
     }
 
+    public void loadDefaultSyntax() throws IOException {
+        FileWriter fw = new FileWriter(syntaxPath);
+        String defaults = """
+                todo todo
+                deadline deadline
+                event event
+                find find
+                list list
+                mark mark
+                unmark unmark
+                delete delete
+                """;
+        fw.write(defaults);
+        fw.close();
+    }
+
     /**
      * TODO
      * @param parser TODO
      */
     public void loadSyntaxPreferences(Parser parser) {
-        boolean fileExists = Files.exists(tasksPath);
-        if (!fileExists) {
-            System.out.println("missing directory");
-        }
+        File file = new File(syntaxPath);
+        boolean fileExists = file.exists();
         try {
-            parser.parseFromFile(syntaxPath);
+            if (!fileExists) {
+                file.getParentFile().mkdirs();
+                Files.createFile(Paths.get(syntaxPath));
+                loadDefaultSyntax();
+            }
+            parser.parseFromFile(file);
         } catch (IOException | InvalidInputException e) {
             System.out.println("something went wrong :(");
         }
@@ -81,7 +99,7 @@ public class Storage {
      * @throws IOException if an error occurs while saving the file.
      */
     public void updateTasks(ArrayList<Task> list) throws IOException {
-        FileWriter fw = new FileWriter(tasksPath.toString(), false);
+        FileWriter fw = new FileWriter(tasksPath, false);
         for (Task task : list) {
             fw.write(task.toFile() + "\n");
         }
@@ -95,7 +113,7 @@ public class Storage {
      */
     public void updateSyntaxPreferences(Parser parser) throws IOException {
         Set<Map.Entry<String, String>> entries = parser.getSyntaxMap().entrySet();
-        FileWriter fw = new FileWriter(syntaxPath.toString(), false);
+        FileWriter fw = new FileWriter(syntaxPath, false);
         for (Map.Entry<String, String> entry : entries) {
             fw.write(entry.getKey() + " " + entry.getValue() + "\n");
         }

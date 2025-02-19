@@ -23,6 +23,13 @@ public class ShowSyntaxCommand extends Command {
      */
     @Override
     public String execute(TaskManager taskManager, UI ui, Parser parser, Storage store) {
-        return "Here's your syntax: \n" + ui.showBorder() + parser.saySyntax();
+        String response = "Here's your syntax: \n" + ui.showBorder() + parser.saySyntax() + ui.showBorder();
+        response += "Reminder to please adhere to the following formats: \n";
+        response += """
+                todo ...
+                deadline ... /by ...
+                event ... /from ... /to
+                """;
+        return response;
     }
 }

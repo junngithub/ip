@@ -2,6 +2,7 @@ package essentials;
 
 import java.util.ArrayList;
 
+import exceptions.InvalidInputException;
 import tasks.Task;
 
 /**
@@ -35,7 +36,7 @@ public class TaskManager {
      *
      * @param task the task to be added to the list.
      */
-    public String sayTaskAddedToList(Task task) {
+    public String sayTaskAddedToList(Task task) throws InvalidInputException {
         assert task != null;
         addToList(task);
         return task.toString() + "\n";
@@ -45,7 +46,10 @@ public class TaskManager {
      * TODO
      * @param task TODO
      */
-    public void addToList(Task task) {
+    public void addToList(Task task) throws InvalidInputException {
+        if (list.contains(task)) {
+            throw new InvalidInputException(task.getTask());
+        }
         list.add(task);
     }
 

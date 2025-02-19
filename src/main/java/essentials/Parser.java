@@ -1,5 +1,6 @@
 package essentials;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.time.LocalDate;
@@ -123,17 +124,11 @@ public class Parser {
      *     keywords, dates or times
      * @throws InvalidInputException if the input's format is invalid.
      */
-    public Task createTask(String userInput) throws EmptyInputException, InvalidInputException {
+    public Task createTask(String userInput, boolean isFromFile) throws EmptyInputException, InvalidInputException {
         String[] arr = userInput.trim().split(" ", 2);
         String commandString = arr[0];
-        String taskType = "";
-        if (syntaxMap.get("todo").equals(commandString)) {
-            taskType = "todo";
-        } else if (syntaxMap.get("deadline").equals(commandString)) {
-            taskType = "deadline";
-        } else if (syntaxMap.get("event").equals(commandString)) {
-            taskType = "event";
-        }
+        String taskType = parseTaskType(commandString, isFromFile);
+        assert taskType != null;
         if (arr.length == 1 || arr[1].trim().charAt(0) == '/') {
             throw new EmptyInputException(taskType, "description");
         }
@@ -144,6 +139,21 @@ public class Parser {
         case "todo" -> ToDos.of(string);
         default -> null;
         };
+    }
+
+    private String parseTaskType(String commandString, boolean isFromFile) {
+        if (isFromFile) {
+            return commandString;
+        }
+        if (syntaxMap.get("todo").equals(commandString)) {
+            return "todo";
+        } else if (syntaxMap.get("deadline").equals(commandString)) {
+            return "deadline";
+        } else if (syntaxMap.get("event").equals(commandString)) {
+            return "event";
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -162,21 +172,21 @@ public class Parser {
     /**
      * Parses tasks from a file and designates them to the task manager.
      *
-     * @param path the path of the file to parse.
+     * @param file the path of the file to parse.
      * @param taskManager the task manager to add the parsed tasks to.
      * @throws NotACommandException if a task type is invalid.
      * @throws IOException if there is an issue reading the file.
      * @throws EmptyInputException if a task contains empty input.
      * @throws InvalidInputException if a task contains invalid input.
      */
-    public void parseFromFile(Path path, TaskManager taskManager)
+    public void parseFromFile(File file, TaskManager taskManager)
             throws NotACommandException, IOException, EmptyInputException, InvalidInputException {
-        Scanner s = new Scanner(path);
+        Scanner s = new Scanner(file);
         while (s.hasNext()) {
             String line = s.nextLine();
             String[] lineArr = line.split(" ", 2);
             String taskString = lineArr[1];
-            Task task = createTask(taskString);
+            Task task = createTask(taskString, true);
             String isDone = lineArr[0];
             addTaskFromFile(task, taskManager, isDone);
         }
@@ -184,12 +194,12 @@ public class Parser {
 
     /**
      * TODO
-     * @param path TODO
+     * @param file TODO
      * @throws IOException TODO
      * @throws InvalidInputException TODO
      */
-    public void parseFromFile(Path path) throws IOException, InvalidInputException {
-        Scanner s = new Scanner(path);
+    public void parseFromFile(File file) throws IOException, InvalidInputException {
+        Scanner s = new Scanner(file);
         while (s.hasNext()) {
             String line = s.nextLine();
             String[] lineArr = line.split(" ", 2);
@@ -237,7 +247,7 @@ public class Parser {
         }
         default -> {
             // should not reach this point i.e. no other keywords should be added or manipulated
-            assert true;
+            assert false;
         }
         }
     }
@@ -248,7 +258,7 @@ public class Parser {
     }
 
     private void addTaskFromFile(Task task, TaskManager taskManager, String isDone)
-            throws NotACommandException {
+            throws NotACommandException, InvalidInputException {
         if (task == null) {
             throw new NotACommandException();
         }

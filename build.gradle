@@ -51,7 +51,7 @@ application {
 }
 
 shadowJar {
-    archiveBaseName = "java.icarus"
+    archiveBaseName = "icarus"
     archiveClassifier = null
 }
 
