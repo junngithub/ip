@@ -33,6 +33,7 @@ public class ListCommand extends Command {
             return "You have no items in your list.";
         } else {
             StringBuilder response = new StringBuilder("Here is your list:\n");
+            response.append(ui.showBorder());
             int i = 1;
             for (Task item : list) {
                 response.append(i).append(". ").append(item.toString()).append("\n");

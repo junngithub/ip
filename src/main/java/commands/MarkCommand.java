@@ -41,6 +41,6 @@ public class MarkCommand extends Command {
         }
         Task task = list.get(i - 1);
         task.markDone();
-        return "Very well, I have marked this as completed: \n" + task;
+        return "Very well, I have marked this as completed: \n" + ui.showBorder() + task + "\n";
     }
 }

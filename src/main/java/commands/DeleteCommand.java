@@ -44,7 +44,8 @@ public class DeleteCommand extends Command {
             throw new InvalidInputException(i, size);
         }
         Task task = list.remove(i - 1);
-        String response = "I have removed this item: \n" + task + "\n";
+        String response = "I have removed this item: \n" + ui.showBorder() + task + "\n";
+        response += ui.showBorder();
         response += taskManager.sayNumberOfItems();
         return response;
     }

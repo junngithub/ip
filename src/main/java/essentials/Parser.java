@@ -43,7 +43,7 @@ public class Parser {
     private Pattern validUnmarkPattern = Pattern.compile("^unmark [1-9][0-9]*$");
     private Pattern validDeletePattern = Pattern.compile("^delete [1-9][0-9]*$");
     private Pattern hasNumberPattern = Pattern.compile("^(mark|unmark|delete)$");
-    private Pattern taskPattern = Pattern.compile("^(todo|deadline|event)");
+    private Pattern taskPattern = Pattern.compile("^(todo|deadline|event)$");
     private Pattern hasKeywordPattern = Pattern.compile("^(find|set)$");
     private final Pattern validSetPattern =
             Pattern.compile("^set (todo|deadline|event|list|find|unmark|mark|delete)");
@@ -78,7 +78,7 @@ public class Parser {
                 return new ListCommand();
             } else if (hasNumberPattern.matcher(userInput.split(" ")[0]).find()) {
                 return parseHasNumberPatternCommand(userInput);
-            } else if (taskPattern.matcher(userInput).find()) {
+            } else if (taskPattern.matcher(userInput.split(" ")[0]).find()) {
                 return new AddCommand(userInput);
             } else if (hasKeywordPattern.matcher(userInput.split(" ")[0]).find()) {
                 return parseHasKeywordCommand(userInput);
@@ -209,7 +209,7 @@ public class Parser {
     public void updateSyntax(String keyword, String preferredKeyword) throws InvalidInputException {
         // ensure no duplicates
         if (syntaxMap.containsValue(preferredKeyword)) {
-            throw new InvalidInputException(preferredKeyword, false);
+            throw new InvalidInputException(preferredKeyword, true);
         }
         this.syntaxMap.put(keyword, preferredKeyword);
         if (keyword.equals(preferredKeyword)) {
@@ -217,7 +217,7 @@ public class Parser {
         }
         switch (keyword) {
         case "todo", "deadline", "event" -> taskPattern = Pattern.compile("^(" + syntaxMap.get("todo") + "|"
-                + syntaxMap.get("deadline") + "|" + syntaxMap.get("event") + ")");
+                + syntaxMap.get("deadline") + "|" + syntaxMap.get("event") + ")$");
         case "find" -> {
             validFindPattern = Pattern.compile("^" + preferredKeyword);
             hasKeywordPattern = Pattern.compile("^(" + preferredKeyword + "|set)$");

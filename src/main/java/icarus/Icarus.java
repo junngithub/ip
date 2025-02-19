@@ -5,6 +5,7 @@ import essentials.Parser;
 import essentials.Storage;
 import essentials.TaskManager;
 import essentials.UI;
+import javafx.util.Pair;
 
 
 /**
@@ -51,6 +52,9 @@ public class Icarus {
         return response.toString();
     }
 
+    public Pair<Pair<Storage, Parser>, TaskManager> prepareExit() {
+        return new Pair<>(new Pair<>(this.store, this.parser), taskManager);
+    }
 
 
     /**

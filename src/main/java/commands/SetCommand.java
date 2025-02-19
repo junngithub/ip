@@ -35,6 +35,6 @@ public class SetCommand extends Command {
         String keyword = arr[1];
         String preferredKeyword = arr[2];
         parser.updateSyntax(keyword, preferredKeyword);
-        return "Here is your updated syntax:\n" + parser.saySyntax();
+        return "Here is your updated syntax:\n" + ui.showBorder() + parser.saySyntax();
     }
 }

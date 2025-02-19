@@ -1,6 +1,8 @@
 package icarus;
 
 import essentials.UI;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -26,7 +28,7 @@ public class MainWindow extends AnchorPane {
     private UI ui;
 
     private Image userImage = new Image(this.getClass().getResourceAsStream("/images/DaUser.png"));
-    private Image icarusImage = new Image(this.getClass().getResourceAsStream("/images/DaDuke.png"));
+    private Image icarusImage = new Image(this.getClass().getResourceAsStream("/images/icarus.jpg"));
 
     @FXML
     public void initialize() {
@@ -54,4 +56,10 @@ public class MainWindow extends AnchorPane {
         );
         userInput.clear();
     }
+
+    @FXML
+    public void exitApplication(ActionEvent event) {
+        Platform.exit();
+    }
+
 }

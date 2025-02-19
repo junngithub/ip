@@ -9,7 +9,7 @@ public class InvalidInputException extends Exception {
     private int index;
     private int size;
     private boolean isDate;
-    private boolean isDueToSet;
+    private boolean isDueToDuplicate;
     private String userInput = "";
 
     /**
@@ -38,11 +38,11 @@ public class InvalidInputException extends Exception {
     /**
      * TODO
      * @param userInput TODO
-     * @param isDueToSet TODO
+     * @param isDueToDuplicate TODO
      */
-    public InvalidInputException(String userInput, boolean isDueToSet) {
+    public InvalidInputException(String userInput, boolean isDueToDuplicate) {
         this.userInput = userInput;
-        this.isDueToSet = isDueToSet;
+        this.isDueToDuplicate = isDueToDuplicate;
     }
 
     /**
@@ -59,10 +59,10 @@ public class InvalidInputException extends Exception {
         if (isDate) {
             return header + "Date and/or Time provided is invalid.\n";
         } else if (!userInput.isEmpty()) {
-            if (isDueToSet) {
-                return header + this.userInput + " is not a valid command to be altered.";
+            if (isDueToDuplicate) {
+                return header + this.userInput + " is already a command.\n";
             }
-            return header + this.userInput + " is already a command.";
+            return header + this.userInput + " is not a valid command to be altered.\n";
         }
         return header + "You are trying to access item number " + this.index
                 + ".\nBut there are " + this.size + " item(s) in your list.\n";

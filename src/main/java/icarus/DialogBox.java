@@ -11,8 +11,10 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 
 /**
  * TODO
@@ -21,7 +23,7 @@ public class DialogBox extends HBox {
     @FXML
     private Label dialog;
     @FXML
-    private ImageView displayPicture;
+    private BorderPane displayPicture;
 
     /**
      * TODO
@@ -29,6 +31,7 @@ public class DialogBox extends HBox {
      * @param img
      */
     private DialogBox(String text, Image img) {
+        this.displayPicture = new BorderPane();
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(MainWindow.class.getResource("/views/DialogBox.fxml"));
             fxmlLoader.setController(this);
@@ -37,9 +40,10 @@ public class DialogBox extends HBox {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        Circle cir2 = new Circle(50,50, 40);
+        cir2.setFill(new ImagePattern(img));
         dialog.setText(text);
-        displayPicture.setImage(img);
+        displayPicture.setCenter(cir2);
     }
 
     /**
@@ -50,6 +54,7 @@ public class DialogBox extends HBox {
         Collections.reverse(tmp);
         getChildren().setAll(tmp);
         setAlignment(Pos.TOP_LEFT);
+        dialog.getStyleClass().add("reply-label");
     }
 
     public static DialogBox getUserDialog(String s, Image i) {

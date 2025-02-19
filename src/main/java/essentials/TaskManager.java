@@ -37,8 +37,8 @@ public class TaskManager {
      */
     public String sayTaskAddedToList(Task task) {
         assert task != null;
-        list.add(task);
-        return "I have added: \n" + task.toString() + "\n";
+        addToList(task);
+        return task.toString() + "\n";
     }
 
     /**
@@ -46,7 +46,6 @@ public class TaskManager {
      * @param task TODO
      */
     public void addToList(Task task) {
-        assert task != null;
         list.add(task);
     }
 

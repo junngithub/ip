@@ -41,6 +41,6 @@ public class UnmarkCommand extends Command {
         }
         Task task = list.get(i - 1);
         task.markUndone();
-        return "Sure, I have marked this as unfinished: \n" + task;
+        return "Sure, I have marked this as unfinished: \n" + ui.showBorder() + task + "\n";
     }
 }

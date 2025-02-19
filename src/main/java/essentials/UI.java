@@ -6,7 +6,6 @@ package essentials;
  * in the console for better visual organization.
  */
 public class UI {
-    private final String border = "--------------------------------------------------\n";
     /**
      * Constructs a UI object.
      */
@@ -18,10 +17,10 @@ public class UI {
      * The message is framed with borders for better visual appearance.
      */
     public String greet() {
-        return """
+        return showBorder() + """
                 Greetings! My name is Icarus.
-                How can I be of service to you today?\n
-                """;
+                How can I be of service to you today?
+                """ + showBorder();
     }
 
     /**
@@ -29,6 +28,6 @@ public class UI {
      * of different sections in the UI.
      */
     public String showBorder() {
-        return border;
+        return "--------------------------------------------------\n";
     }
 }

@@ -38,6 +38,7 @@ public class FindCommand extends Command {
             return "You have no items in your list.";
         } else {
             StringBuilder response = new StringBuilder("Here is a list of Tasks that match your query:\n");
+            response.append(ui.showBorder());
             int i = 1;
             for (Task item : list) {
                 if (Pattern.compile(inputArr[1]).matcher(item.toString()).find()) {
