@@ -52,6 +52,5 @@ public class Main extends Application {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
 }

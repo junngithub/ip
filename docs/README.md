@@ -169,7 +169,7 @@ Icarus will reply in the format
 - the list of syntax mappings
 - reminder to adhere to the format for adding task commands
 
-Example: `set todo t`
+Example: `syntax`
 
 Expected output:
 ```
@@ -192,5 +192,5 @@ event ... /from ... /to
 ```
 
 ### Saying bye to Icarus
-Users can say "bye" to Icarus to exit the program. Alternatively, they can close the window (rude!).
+Users can say `bye` to Icarus to exit the program. Alternatively, they can close the window (rude!).
 In both cases, tasks and syntax preferences will be saved.
