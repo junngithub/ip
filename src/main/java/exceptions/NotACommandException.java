@@ -16,9 +16,9 @@ public class NotACommandException extends Exception {
 
     /**
      * Returns a string representation of the exception, providing a message
-     * indicating that the Icarus.Icarus chatbot cannot process the given request.
+     * indicating that the Icarus chatbot cannot process the given request.
      *
-     * @return a string indicating that the Icarus.Icarus chatbot is unable to assist with the request.
+     * @return a string indicating that the Icarus chatbot is unable to assist with the request.
      */
     @Override
     public String toString() {

@@ -50,6 +50,15 @@ public class Deadlines extends Task {
     }
 
     /**
+     * Returns the formatted version of the deadline.
+     *
+     * @return the formatted deadline string.
+     */
+    public String getDeadline() {
+        return formattedDeadline;
+    }
+
+    /**
      * Returns a string representation of this task in a format suitable for saving to a file.
      * The format includes the task type, description, and the deadline.
      *
@@ -64,10 +73,26 @@ public class Deadlines extends Task {
      * Returns a string representation of this task, including the task type, status,
      * description and the formatted deadline.
      *
-     * @return a string representation of the deadline task.
+     * @return a string representation of the Deadlines task.
      */
     @Override
     public String toString() {
         return "[D]" + super.toString() + " (by: " + formattedDeadline + ")";
+    }
+
+    /**
+     * Compares this Deadlines task with another object for equality.
+     * Two Deadlines tasks are considered equal if they have the same description and formatted deadline.
+     *
+     * @param other the object to compare with.
+     * @return true if the tasks are equal, otherwise false.
+     */
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof Deadlines otherDeadline) {
+            return super.equals(other) && formattedDeadline.equals(otherDeadline.getDeadline());
+        } else {
+            return super.equals(other);
+        }
     }
 }

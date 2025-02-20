@@ -15,17 +15,17 @@ import exceptions.NotACommandException;
 import tasks.Task;
 
 /**
- * The Storage class is responsible for handling the loading and saving of task data
- * from and to a file. It provides functionality to load previously saved task data into
+ * The Storage class is responsible for handling the loading and saving of task data and
+ * syntax preferences from and to a file. It provides functionality to load previously saved task data into
  * a TaskManager instance and to update the save file with the current task list.
- * The default save file is located at "{user.home}/iP/data/icarus.txt".
  */
 public class Storage {
     private String tasksPath;
     private String syntaxPath;
 
     /**
-     * TODO
+     * Constructs a Storage object with the default file paths for tasks and syntax preferences.
+     * The task data is saved in "data/tasks.txt", and the syntax preferences are saved in "data/syntax.txt"
      */
     public Storage() {
         this.tasksPath = "data/tasks.txt";
@@ -57,8 +57,9 @@ public class Storage {
     }
 
     /**
-     * TODO
-     * @throws IOException tODO
+     * Creates a default syntax file with predefined commands and their corresponding syntax.
+     *
+     * @throws IOException if an error occurs while writing to the syntax file.
      */
 
     public void loadDefaultSyntax() throws IOException {
@@ -78,8 +79,10 @@ public class Storage {
     }
 
     /**
-     * TODO
-     * @param parser TODO
+     * Loads user-defined syntax preferences from a file into the provided parser.
+     * If the file does not exist, a default syntax file will be created.
+     *
+     * @param parser the parser to load syntax preferences into.
      */
     public void loadSyntaxPreferences(Parser parser) {
         File file = new File(syntaxPath);
@@ -111,9 +114,11 @@ public class Storage {
     }
 
     /**
-     * TODO
-      * @param parser TODO
-     * @throws IOException TODO
+     * Updates the syntax preferences file with the current syntaxMap from the parser.
+     * The syntax preferences will be saved in the "data/syntax.txt" file.
+     *
+     * @param parser the parser whose syntax preferences are to be saved.
+     * @throws IOException if an error occurs while writing to the syntax preferences file.
      */
     public void updateSyntaxPreferences(Parser parser) throws IOException {
         Set<Map.Entry<String, String>> entries = parser.getSyntaxMap().entrySet();

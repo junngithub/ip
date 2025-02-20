@@ -24,13 +24,16 @@ public class ToDos extends Task {
      * @param task the description of the task to be created.
      * @return a new ToDos object.
      */
-
     public static Task of(String task) {
         return new ToDos(task);
     }
 
 
-
+    /**
+     * Returns a string representation of this task, including the task type, status and description,
+     *
+     * @return a string representation of the ToDo task.
+     */
     @Override
     public String toString() {
         return "[T]" + super.toString();

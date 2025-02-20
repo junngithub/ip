@@ -78,10 +78,21 @@ public abstract class Task {
         this.isDone = false;
     }
 
+    /**
+     * Returns the description of the task
+     * @return a string with the description of the task
+     */
     public String getTask() {
         return task;
     }
 
+    /**
+     * Compares this Task with another object for equality.
+     * Two Tasks are considered equal if they have the same description.
+     *
+     * @param other the object to compare with.
+     * @return true if the tasks are equal, otherwise false.
+     */
     @Override
     public boolean equals(Object other) {
         assert other instanceof Task;

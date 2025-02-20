@@ -15,7 +15,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
 /**
- * TODO
+ * Represents the main window of the Icarus chatbot application.
+ * This class is responsible for managing the user interface,
+ * handling user input, and displaying the conversation between the user and Icarus.
  */
 public class MainWindow extends AnchorPane {
     @FXML
@@ -33,6 +35,11 @@ public class MainWindow extends AnchorPane {
     private Image userImage = new Image(this.getClass().getResourceAsStream("/images/DaUser.png"));
     private Image icarusImage = new Image(this.getClass().getResourceAsStream("/images/icarus.jpg"));
 
+    /**
+     * Initializes the main window.
+     * Binds the scroll pane's vertical value property to the dialog container's height
+     * so that the window automatically scrolls to show the most recent messages.
+     */
     @FXML
     public void initialize() {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
@@ -46,8 +53,9 @@ public class MainWindow extends AnchorPane {
     }
 
     /**
-     * Creates two dialog boxes, one echoing user input and the other containing Duke's reply and then appends them to
-     * the dialog container. Clears the user input after processing.
+     * Handles user input, creates two dialog boxes (one for the user input and one for Icarus' response),
+     * and appends them to the dialog container. Clears the user input field after processing.
+     * Exits the program if the user types "bye".
      */
     @FXML
     private void handleUserInput() {
@@ -63,6 +71,10 @@ public class MainWindow extends AnchorPane {
         }
     }
 
+    /**
+     * Initiates the exit process of the application by scheduling a delayed task to exit the platform.
+     * The platform exits after a 1-second delay.
+     */
     private void exit() {
         new Timer(true).schedule(new TimerTask() {
             public void run () {

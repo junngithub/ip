@@ -17,7 +17,9 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 
 /**
- * TODO
+ * The DialogBox class represents a dialog box that displays a message and an image (profile picture).
+ * It is used to create a visual representation of user input and program responses in a conversation-like interface.
+ * The dialog box can be flipped to change the alignment of the text and image.
  */
 public class DialogBox extends HBox {
     @FXML
@@ -26,9 +28,11 @@ public class DialogBox extends HBox {
     private BorderPane displayPicture;
 
     /**
-     * TODO
-     * @param text
-     * @param img
+     * Constructs a new DialogBox with the given text and image.
+     * The dialog box is initialized with the provided text and an image that is displayed in a circular shape.
+     *
+     * @param text the text to be displayed in the dialog box.
+     * @param img the image to be displayed as the profile picture inside the dialog box.
      */
     private DialogBox(String text, Image img) {
         this.displayPicture = new BorderPane();
@@ -57,10 +61,26 @@ public class DialogBox extends HBox {
         dialog.getStyleClass().add("reply-label");
     }
 
+    /**
+     * Creates and returns a DialogBox for user input with the specified text and image.
+     * The user's dialog will have the image on the right side.
+     *
+     * @param s the text to be displayed for the user.
+     * @param i the image to be displayed as the user's profile picture.
+     * @return a DialogBox displaying the user's input.
+     */
     public static DialogBox getUserDialog(String s, Image i) {
         return new DialogBox(s, i);
     }
 
+    /**
+     * Creates and returns a DialogBox for Icarus (the program's responses) with the specified text and image.
+     * Icarus's dialog will have the image on the left side.
+     *
+     * @param text the text to be displayed for Icarus's response.
+     * @param img the image to be displayed as Icarus's profile picture.
+     * @return a DialogBox displaying Icarus's response.
+     */
     public static DialogBox getIcarusDialog(String text, Image img) {
         var db = new DialogBox(text, img);
         db.flip();

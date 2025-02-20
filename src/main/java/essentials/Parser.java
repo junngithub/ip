@@ -90,6 +90,13 @@ public class Parser {
         }
     }
 
+    /**
+     * Helper method to handle commands that are identified by keywords "find" and "set".
+     *
+     * @param userInput the input string provided by the user.
+     * @return the corresponding command object.
+     * @throws InvalidInputException if the command which syntax is to be changed under "set" command is invalid.
+     */
     private Command parseHasKeywordCommand(String userInput) throws InvalidInputException {
         if (validFindPattern.matcher(userInput).find()) {
             return new FindCommand(userInput);
@@ -97,10 +104,17 @@ public class Parser {
         if (validSetPattern.matcher(userInput).find()) {
             return new SetCommand(userInput);
         } else {
-            throw new InvalidInputException(userInput.split(" ")[1], false);
+            throw new InvalidInputException(userInput.split(" ")[1], false, false);
         }
     }
 
+    /**
+     * Helper method to handle commands that involve numbers such as "mark", "unmark", and "delete".
+     *
+     * @param userInput the input string provided by the user.
+     * @return the corresponding command object.
+     * @throws EmptyInputException if a number is expected but is missing or invalid (i.e. exceeds size of list).
+     */
     private Command parseHasNumberPatternCommand(String userInput) throws EmptyInputException {
         if (validUnmarkPattern.matcher(userInput).find()) {
             return new UnmarkCommand(userInput);
@@ -115,7 +129,7 @@ public class Parser {
 
     /**
      * Creates a task from a user input string.
-     * The task can be of type "to-do", "deadline", or "event".
+     * The task can be of type "todo", "deadline", or "event".
      *
      * @param userInput the input string representing the task to be created.
      * @return the created task.
@@ -140,6 +154,13 @@ public class Parser {
         };
     }
 
+    /**
+     * Determines the type of the task based on the user input or file input.
+     *
+     * @param commandString the command string (e.g., "todo", "deadline", "event").
+     * @param isFromFile indicates whether the task is being parsed from a file.
+     * @return the corresponding task type (e.g., "todo", "deadline", "event").
+     */
     private String parseTaskType(String commandString, boolean isFromFile) {
         if (isFromFile) {
             return commandString;
@@ -156,8 +177,9 @@ public class Parser {
     }
 
     /**
-     * TODO
-     * @return TODO
+     * Returns the current list of syntax configurations as a string.
+     *
+     * @return the string representing the current list of syntax configurations.
      */
     public String saySyntax() {
         Set<Map.Entry<String, String>> entries = this.syntaxMap.entrySet();
@@ -192,10 +214,10 @@ public class Parser {
     }
 
     /**
-     * TODO
-     * @param file TODO
-     * @throws IOException TODO
-     * @throws InvalidInputException TODO
+     * Parses syntax preferences from a file and updates them to syntaxMap.
+     * @param file the path of the file to parse.
+     * @throws IOException if there is an issue reading the file.
+     * @throws InvalidInputException if there is a duplicate syntax.
      */
     public void parseFromFile(File file) throws IOException, InvalidInputException {
         Scanner s = new Scanner(file);
@@ -210,20 +232,19 @@ public class Parser {
     }
 
     /**
-     * TODO
-     * @param keyword TODO
-     * @param preferredKeyword TODO
-     * @throws InvalidInputException TODO
+     * Updates the syntax for updatable commands.
+     *
+     * @param keyword the keyword to update (e.g., "todo", "deadline", "event").
+     * @param preferredKeyword the new keyword to be used.
+     * @throws InvalidInputException if the new keyword is a duplicate.
      */
     public void updateSyntax(String keyword, String preferredKeyword) throws InvalidInputException {
         // ensure no duplicates
         if (syntaxMap.containsValue(preferredKeyword)) {
-            throw new InvalidInputException(preferredKeyword, true);
+            throw new InvalidInputException(preferredKeyword, true, false);
         }
         this.syntaxMap.put(keyword, preferredKeyword);
-        if (keyword.equals(preferredKeyword)) {
-            return;
-        }
+
         switch (keyword) {
         case "todo", "deadline", "event" -> taskPattern = Pattern.compile("^(" + syntaxMap.get("todo") + "|"
                 + syntaxMap.get("deadline") + "|" + syntaxMap.get("event") + ")$");
@@ -256,11 +277,18 @@ public class Parser {
                 + "|" + syntaxMap.get("delete") + ")$");
     }
 
+    /**
+     * Adds a task that was parsed from a file to the task manager, marking it as done or not
+     * depending on its status in the file.
+     *
+     * @param task the task to add.
+     * @param taskManager the task manager to add the task to.
+     * @param isDone a string representing the task's completion status ("X" for completed, " " for incomplete).
+     * @throws NotACommandException if isDone is neither 1 nor 0
+     */
     private void addTaskFromFile(Task task, TaskManager taskManager, String isDone)
             throws NotACommandException, InvalidInputException {
-        if (task == null) {
-            throw new NotACommandException();
-        }
+        assert task != null;
         taskManager.addToList(task);
         if (isDone.equals("1")) {
             task.markDone();

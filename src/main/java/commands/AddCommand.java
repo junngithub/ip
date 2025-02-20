@@ -24,9 +24,10 @@ public class AddCommand extends Command {
      * the task to the TaskManager, and displaying the updated task count.
      *
      * @param taskManager the TaskManager where the task will be added.
-     * @param ui the UI to interact with the user.
+     * @param ui the UI to format the response with clear paragraph separation.
      * @param parser the Parser that processes the user input and creates the task.
      * @param store the Storage for saving or loading task data (not used in this method).
+     * @return a string response that confirms the task was added and displays the updated task count.
      * @throws EmptyInputException if the user input is missing a description of the task,
      *     keywords, dates or times
      * @throws InvalidInputException if the user input's format is invalid.
@@ -39,6 +40,4 @@ public class AddCommand extends Command {
         response += taskManager.sayNumberOfItems();
         return response;
     }
-
-
 }

@@ -35,7 +35,12 @@ public class Icarus {
 
 
     /**
-     * TODO
+     * Processes the user input by parsing the command, executing it, and
+     * returning the appropriate response.
+     * The response includes the result of the command execution along with borders.
+     *
+     * @param userInput the input provided by the user, which will be parsed into a command.
+     * @return the response generated from executing the parsed command, including any exceptions.
      */
     public String getResponse(String userInput) {
         StringBuilder response = new StringBuilder();
@@ -52,18 +57,15 @@ public class Icarus {
         return response.toString();
     }
 
+    /**
+     * Prepares the necessary data for saving when exiting the program.
+     * Returns a pair of pairs containing the storage and parser objects, along with the task manager.
+     *
+     * @return a pair of pairs containing the storage and parser objects, and the task manager.
+     */
     public Pair<Pair<Storage, Parser>, TaskManager> prepareExit() {
         return new Pair<>(new Pair<>(this.store, this.parser), taskManager);
     }
 
-
-    /**
-     * Echoes the user input to the console with a newline after it.
-     *
-     * @param userInput the input to be echoed.
-     */
-    private void echo(String userInput) {
-        System.out.println(userInput + "\n");
-    }
 }
 

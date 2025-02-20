@@ -23,7 +23,7 @@ public class ListCommand extends Command {
      * If no tasks are present, a message indicating that the list is empty will be shown.
      *
      * @param taskManager the TaskManager to retrieve the list of tasks.
-     * @param ui the UI to interact with the user.
+     * @param ui the UI to format the response with clear paragraph separation.
      * @param parser the Parser to process the user input (not used in this method).
      * @param store the Storage for saving or loading task data (not used in this method).
      */

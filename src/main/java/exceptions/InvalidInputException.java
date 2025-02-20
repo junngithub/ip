@@ -33,27 +33,26 @@ public class InvalidInputException extends Exception {
      * This is thrown when the user provides an invalid date or time format.
      */
     public InvalidInputException() {
+        super();
         this.isDate = true;
+        this.isDuplicateTask = false;
+        this.isDuplicateCommand = false;
     }
 
     /**
-     * TODO
-     * @param userInput TODO
-     * @param isDueToDuplicate TODO
+     * Constructs an InvalidInputException for duplicate command or task input.
+     * This is thrown when the user attempts to input a command or task that already exists,
+     *     or is trying to set syntax preference for an invalid command.
+     *
+     * @param userInput the input that is either a duplicate task or command.
+     * @param isDuplicateCommand flag indicating whether the user had inputted a duplicate command.
+     * @param isDuplicateTask flag indicating whether the user had inputted a duplicate task.
      */
-    public InvalidInputException(String userInput, boolean isDueToDuplicate) {
+    public InvalidInputException(String userInput, boolean isDuplicateCommand, boolean isDuplicateTask) {
+        super();
         this.userInput = userInput;
-        this.isDuplicateCommand = isDueToDuplicate;
-    }
-
-    /**
-     * TODO
-     * @param userInput TODO
-     */
-
-    public InvalidInputException(String userInput) {
-        this.userInput = userInput;
-        this.isDuplicateTask = true;
+        this.isDuplicateCommand = isDuplicateCommand;
+        this.isDuplicateTask = isDuplicateTask;
     }
 
     /**

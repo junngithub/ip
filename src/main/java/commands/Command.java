@@ -31,10 +31,12 @@ public abstract class Command {
      * Executes the command. This method must be implemented by subclasses to define the specific
      * behavior of the command.
      *
-     * @param taskManager the TaskManager to manage tasks for the command..
-     * @param ui the UI to interact with the user.
+     * @param taskManager the TaskManager that contains tasks to be read or manipulated based
+     *     on the type of command
+     * @param ui the UI to format the response with clear paragraph separation.
      * @param parser the Parser that processes the user input and creates the task.
-     * @param store the {@link Storage} to manage task saving/loading (if needed by the command).
+     * @param store the Storage to manage task saving/loading (if needed by the command).
+     * @return a string response.
      * @throws Exception if an error occurs during command execution.
      */
     public abstract String execute(TaskManager taskManager, UI ui, Parser parser, Storage store)

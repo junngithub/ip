@@ -24,9 +24,10 @@ public class ExitCommand extends Command {
      * and printing a farewell message
      *
      * @param taskManager the TaskManager to retrieve the task list for saving.
-     * @param ui the UI to interact with the user.
+     * @param ui the UI to format the response with clear paragraph separation (not used in this method).
      * @param parser the Parser to process the user input (not used in this method).
      * @param store the Storage for saving data in the task list to a specified file.
+     * @return a string response that bids farewell to the user.
      * @throws IOException if an error occurs while saving the task list to the file.
      */
     public String execute(TaskManager taskManager, UI ui, Parser parser, Storage store)

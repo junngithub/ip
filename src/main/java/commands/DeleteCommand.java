@@ -29,9 +29,10 @@ public class DeleteCommand extends Command {
      * removing the corresponding task from the TaskManager, and displaying a confirmation message.
      *
      * @param taskManager the TaskManager to manage tasks and remove the task.
-     * @param ui the UI to interact with the user.
+     * @param ui the UI to format the response with clear paragraph separation.
      * @param parser the Parser to process the user input (not used in this method).
      * @param store the Storage for saving or loading task data (not used in this method).
+     * @return a string response that confirms the task was deleted and displays the updated task count.
      * @throws InvalidInputException if the given index is out of bounds.
      */
     public String execute(TaskManager taskManager, UI ui, Parser parser, Storage store)

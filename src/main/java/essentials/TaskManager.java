@@ -23,18 +23,21 @@ public class TaskManager {
     }
 
     /**
-     * Displays the number of tasks currently in the list.
      * Outputs a message indicating how many tasks are in the list.
+     *
+     * @return a string indicating the number of tasks.
      */
     public String sayNumberOfItems() {
         return "You have " + list.size() + " item(s) in your list.\n";
     }
 
     /**
-     * Adds a new task to the list. If toCall is true, a confirmation message
-     * with the task details is printed.
+     * Adds a new task to the list and returns a confirmation message.
+     * If successful, a string with the task details is returned.
      *
      * @param task the task to be added to the list.
+     * @return a string containing the task details.
+     * @throws InvalidInputException if the task is already in the list.
      */
     public String sayTaskAddedToList(Task task) throws InvalidInputException {
         assert task != null;
@@ -43,12 +46,15 @@ public class TaskManager {
     }
 
     /**
-     * TODO
-     * @param task TODO
+     * Adds a task to the internal list of tasks.
+     * Throws an InvalidInputException if the task already exists in the list.
+     *
+     * @param task the task to be added to the list.
+     * @throws InvalidInputException if the task already exists in the list.
      */
     public void addToList(Task task) throws InvalidInputException {
         if (list.contains(task)) {
-            throw new InvalidInputException(task.getTask());
+            throw new InvalidInputException(task.getTask(), false, true);
         }
         list.add(task);
     }

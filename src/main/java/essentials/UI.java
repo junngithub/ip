@@ -15,6 +15,8 @@ public class UI {
     /**
      * Displays a greeting message to the user, introducing the program.
      * The message is framed with borders for better visual appearance.
+     *
+     * @return a string containing a greeting message
      */
     public String greet() {
         return showBorder() + """

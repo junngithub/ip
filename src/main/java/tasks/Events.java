@@ -68,6 +68,24 @@ public class Events extends Task {
     }
 
     /**
+     * Returns the formatted version of the startDate.
+     *
+     * @return the formatted startDate string.
+     */
+    public String getStartDate() {
+        return formattedStartDate;
+    }
+
+    /**
+     * Returns the formatted version of the endDate.
+     *
+     * @return the formatted endDate string.
+     */
+    public String getEndDate() {
+        return formattedEndDate;
+    }
+
+    /**
      * Returns a string representation of this task in a format suitable for saving to a file.
      * The format includes the task type, description, start date, and end date.
      *
@@ -82,11 +100,29 @@ public class Events extends Task {
      * Returns a string representation of this task, including the task type, status, description,
      * start date, and end date.
      *
-     * @return a string representation of the event task.
+     * @return a string representation of the Events task.
      */
     @Override
     public String toString() {
         return "[E]" + super.toString() + " (from: " + this.formattedStartDate
                 + " to: " + this.formattedEndDate + ")";
+    }
+
+    /**
+     * Compares this Events task with another object for equality.
+     * Two Events tasks are considered equal if they have the same description, formattedStartDate
+     *     and formattedEndDate.
+     *
+     * @param other the object to compare with.
+     * @return true if the tasks are equal, otherwise false.
+     */
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof Events otherEvent) {
+            return super.equals(other) && formattedStartDate.equals(otherEvent.getStartDate())
+                    && formattedEndDate.equals(otherEvent.getEndDate());
+        } else {
+            return super.equals(other);
+        }
     }
 }
